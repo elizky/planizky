@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import LoginForm from '@/components/ui/Forms/LoginForm';
+import LoginForm from '@/components/Forms/LoginForm';
 
 export const metadata: Metadata = {
   title: 'Login | Planizky ',

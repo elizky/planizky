@@ -9,8 +9,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { loginSchema } from '@/lib/zod';
-import { loginAction } from '@/actions/auth-actions';
+import { registerSchema } from '@/lib/zod';
+import { registerAction } from '@/actions/auth-actions';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,23 +24,24 @@ import {
 import { Input } from '@/components/ui/input';
 import { signIn } from 'next-auth/react';
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
       password: '',
+      name: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
     setError(null);
     startTransition(async () => {
-      const response = await loginAction(values);
+      const response = await registerAction(values);
       if (response.error) {
         setError(response.error);
       } else {
@@ -54,13 +55,13 @@ const LoginForm = () => {
   };
 
   return (
-    <div className='w-full flex justify-center lg:grid lg:grid-cols-2 h-screen container'>
-      <div className='flex items-center justify-center py-12'>
+    <div className='w-full flex justify-center lg:grid lg:grid-cols-2 h-screen '>
+      <div className='flex items-center justify-center py-12 container'>
         <div className='mx-auto grid sm:w-[350px] gap-6'>
           <div className='grid gap-2 text-left'>
-            <h1 className='text-3xl font-bold'>Login</h1>
-            <p className=' text-muted-foreground'>
-              Enter your credentials to login to your account
+            <h1 className='text-3xl font-bold'>Register</h1>
+            <p className='text-balance text-muted-foreground'>
+              Enter your information to create an account
             </p>
           </div>
           <Form {...form}>
@@ -68,18 +69,30 @@ const LoginForm = () => {
               <div className='grid gap-4'>
                 <FormField
                   control={form.control}
-                  name='email'
+                  name='name'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input id='email' type='email' placeholder='m@example.com' {...field} />
+                        <Input placeholder='Name' type='text' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
+                <FormField
+                  control={form.control}
+                  name='email'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder='email' type='email' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name='password'
@@ -87,7 +100,7 @@ const LoginForm = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input id='password' type='password' placeholder='******' {...field} />
+                        <Input placeholder='password' type='password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -95,7 +108,7 @@ const LoginForm = () => {
                 />
                 {error && <FormMessage>{error}</FormMessage>}
                 <Button type='submit' className='w-full' disabled={isPending}>
-                  Login
+                  Create an account
                 </Button>
                 <Button
                   type='button'
@@ -104,13 +117,13 @@ const LoginForm = () => {
                   disabled={isPending}
                   onClick={handleLoginGoogle}
                 >
-                  Login with Google
+                  Sign up with Google
                 </Button>
               </div>
               <div className='mt-4 text-center text-sm'>
-                Don&apos;t have an account?{' '}
-                <Link href='/register' className='underline'>
-                  Sign up
+                Already have an account? {' '}
+                <Link href='/login' className='underline'>
+                  Sign in
                 </Link>
               </div>
             </form>
@@ -123,11 +136,11 @@ const LoginForm = () => {
           alt='Image'
           width='1920'
           height='1080'
-          className='h-full w-full object-cover '
+          className='h-full w-full object-cover filter invert'
         />
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
