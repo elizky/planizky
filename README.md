@@ -1,4 +1,4 @@
-```[tasklist]
+
 ### My tasks
 - [ ] Update Google Provider variables
 - [ ] Test Google log in
@@ -8,4 +8,3 @@
     - [ ] See tracking
 - [ ] Create planning in db
 - [ ] Upload planning in db
-```
