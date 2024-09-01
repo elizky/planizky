@@ -22,7 +22,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { signIn } from 'next-auth/react';
+import { signIn } from '@/auth';
+import ButtonSocial from '../SocialBtn';
 
 const LoginForm = () => {
   const [error, setError] = useState<string | null>(null);
@@ -97,14 +98,7 @@ const LoginForm = () => {
                 <Button type='submit' className='w-full' disabled={isPending}>
                   Login
                 </Button>
-                <Button
-                  type='button'
-                  variant='outline'
-                  className='w-full'
-                  onClick={handleLoginGoogle}
-                >
-                  Login with Google
-                </Button>
+                <ButtonSocial provider='google'>Login with Google</ButtonSocial>
               </div>
               <div className='mt-4 text-center text-sm'>
                 Don&apos;t have an account?{' '}

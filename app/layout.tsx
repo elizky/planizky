@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Work_Sans } from 'next/font/google';
+import { Gudea } from 'next/font/google';
 
 import './globals.css';
 import { ThemeProvider } from '@/lib/theme-provider';
@@ -7,8 +7,8 @@ import { ThemeProvider } from '@/lib/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/toaster';
 
-const work = Work_Sans({
-  weight: ['300', '400', '600', '700'],
+const work = Gudea({
+  weight: ['400', '700'],
   subsets: ['latin'],
 });
 
@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={work.className}>
         <ThemeProvider
           attribute='class'
-          defaultTheme='system'
+          defaultTheme='dark'
           enableSystem
           disableTransitionOnChange
         >
