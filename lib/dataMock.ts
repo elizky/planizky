@@ -1,5 +1,8 @@
-export const dataMock = [
+import { TrainingDay } from '@/types/types';
+
+export const dataMock: TrainingDay[] = [
   {
+    id: '1278930123',
     day: 'Día 1',
     type: 'Circuito Cuerpo Completoooo',
     circuit_info:
@@ -12,7 +15,7 @@ export const dataMock = [
         weight: '-',
         type: 'cardio',
         muscle: 'cuerpo completo',
-        comment: 'A ritmo moderado.'
+        comment: 'A ritmo moderado.',
       },
       {
         name: 'Salto al cajón o Skipping con stepper',
@@ -21,8 +24,7 @@ export const dataMock = [
         weight: '-',
         type: 'pliométrico',
         muscle: 'gemelos, cuádriceps',
-        comment:
-          'Mejora la resistencia cardiovascular y la potencia de piernas. Ideal para tenis.'
+        comment: 'Mejora la resistencia cardiovascular y la potencia de piernas. Ideal para tenis.',
       },
       {
         name: 'Sentadilla con mancuernas',
@@ -31,7 +33,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'cuádriceps, glúteos',
-        comment: 'Activa cuádriceps y glúteos.'
+        comment: 'Activa cuádriceps y glúteos.',
       },
       {
         name: 'Flexiones',
@@ -40,7 +42,7 @@ export const dataMock = [
         weight: '-',
         type: 'fuerza',
         muscle: 'pecho, tríceps',
-        comment: 'Trabaja pecho y tríceps.'
+        comment: 'Trabaja pecho y tríceps.',
       },
       {
         name: 'Cuerdas de batalla',
@@ -49,7 +51,7 @@ export const dataMock = [
         weight: '-',
         type: 'cardio',
         muscle: 'cuerpo completo',
-        comment: 'Incrementa la resistencia y quema calorías.'
+        comment: 'Incrementa la resistencia y quema calorías.',
       },
       {
         name: 'Giros rusos',
@@ -58,8 +60,7 @@ export const dataMock = [
         weight: 'Ligero',
         type: 'fuerza',
         muscle: 'abdominales, oblicuos',
-        comment:
-          'Trabaja los oblicuos abdominales, esenciales para giros en tenis.'
+        comment: 'Trabaja los oblicuos abdominales, esenciales para giros en tenis.',
       },
       {
         name: 'Estiramiento de Cuádriceps',
@@ -68,7 +69,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'cuádriceps',
-        comment: 'Mantén las rodillas juntas y siente el estiramiento.'
+        comment: 'Mantén las rodillas juntas y siente el estiramiento.',
       },
       {
         name: 'Estiramiento de Hombros y Trapecios',
@@ -77,7 +78,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'hombros, trapecios',
-        comment: 'Lleva el brazo cruzado sobre el pecho.'
+        comment: 'Lleva el brazo cruzado sobre el pecho.',
       },
       {
         name: 'Estiramiento de Espalda (posición del niño)',
@@ -86,12 +87,12 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'espalda baja',
-        comment:
-          'Siéntate sobre los talones y estira los brazos hacia adelante.'
-      }
-    ]
+        comment: 'Siéntate sobre los talones y estira los brazos hacia adelante.',
+      },
+    ],
   },
   {
+    id: '786900841',
     day: 'Día 2',
     type: 'Pesas: Fuerza y Estabilidad',
     exercises: [
@@ -102,7 +103,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'cuerpo completo',
-        comment: 'Mejora rango de movimiento.'
+        comment: 'Mejora rango de movimiento.',
       },
       {
         name: 'Prensa de piernas',
@@ -111,7 +112,7 @@ export const dataMock = [
         weight: 'Moderado a pesado',
         type: 'fuerza',
         muscle: 'cuádriceps, glúteos, isquiotibiales',
-        comment: 'Fortalece cuádriceps, glúteos y femorales.'
+        comment: 'Fortalece cuádriceps, glúteos y femorales.',
       },
       {
         name: 'Peso muerto rumano',
@@ -120,7 +121,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'isquiotibiales, espalda baja, glúteos',
-        comment: 'Fortalece la cadena posterior.'
+        comment: 'Fortalece la cadena posterior.',
       },
       {
         name: 'Remo con barra',
@@ -129,7 +130,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'espalda media, bíceps',
-        comment: 'Trabaja la espalda alta y los bíceps.'
+        comment: 'Trabaja la espalda alta y los bíceps.',
       },
       {
         name: 'Curl de bíceps y tríceps en polea',
@@ -138,7 +139,7 @@ export const dataMock = [
         weight: 'Ligero a Moderado',
         type: 'fuerza',
         muscle: 'bíceps, tríceps',
-        comment: 'Aísla y define los brazos.'
+        comment: 'Aísla y define los brazos.',
       },
       {
         name: 'Estiramiento de Isquiotibiales (sentado)',
@@ -147,7 +148,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'isquiotibiales',
-        comment: 'Inclínate hacia adelante sin doblar la espalda.'
+        comment: 'Inclínate hacia adelante sin doblar la espalda.',
       },
       {
         name: 'Estiramiento de Glúteos (en el suelo)',
@@ -156,7 +157,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'glúteos',
-        comment: 'Lleva las rodillas hacia el pecho cruzando una pierna.'
+        comment: 'Lleva las rodillas hacia el pecho cruzando una pierna.',
       },
       {
         name: 'Estiramiento de Pecho (en una puerta)',
@@ -165,11 +166,13 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'pecho',
-        comment: 'Coloca el brazo en la puerta y avanza ligeramente.'
-      }
-    ]
+        comment: 'Coloca el brazo en la puerta y avanza ligeramente.',
+      },
+    ],
   },
   {
+    id: '16747192048902',
+
     day: 'Día 3',
     type: 'Circuito Piernas y Core',
     circuit_info:
@@ -182,7 +185,7 @@ export const dataMock = [
         weight: '-',
         type: 'cardio',
         muscle: 'piernas',
-        comment: 'Activación moderada de piernas.'
+        comment: 'Activación moderada de piernas.',
       },
       {
         name: 'Extensión de gemelos sobre disco',
@@ -191,7 +194,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'gemelos',
-        comment: 'Fortalece los gemelos y mejora el equilibrio.'
+        comment: 'Fortalece los gemelos y mejora el equilibrio.',
       },
       {
         name: 'Zancadas caminando con mancuernas',
@@ -200,8 +203,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'glúteos, cuádriceps',
-        comment:
-          'Activa glúteos y piernas. Importante para desplazamientos laterales en tenis.'
+        comment: 'Activa glúteos y piernas. Importante para desplazamientos laterales en tenis.',
       },
       {
         name: 'Elevación de cadera en máquina',
@@ -210,7 +212,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'glúteos, espalda baja',
-        comment: 'Enfocado en glúteos y lumbares.'
+        comment: 'Enfocado en glúteos y lumbares.',
       },
       {
         name: 'Camilla de isquios',
@@ -219,7 +221,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'isquiotibiales',
-        comment: 'Ejercicio específico para isquiotibiales.'
+        comment: 'Ejercicio específico para isquiotibiales.',
       },
       {
         name: 'Estiramiento de Psoas (zancada baja)',
@@ -228,7 +230,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'flexores de cadera',
-        comment: 'Lleva la cadera hacia adelante con el torso recto.'
+        comment: 'Lleva la cadera hacia adelante con el torso recto.',
       },
       {
         name: 'Estiramiento de Cuádriceps (de pie)',
@@ -237,7 +239,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'cuádriceps',
-        comment: 'Mantén las rodillas juntas y siente el estiramiento.'
+        comment: 'Mantén las rodillas juntas y siente el estiramiento.',
       },
       {
         name: 'Estiramiento de Gemelos (de pie contra la pared)',
@@ -246,11 +248,12 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'gemelos',
-        comment: 'Lleva la pierna hacia atrás manteniéndola estirada.'
-      }
-    ]
+        comment: 'Lleva la pierna hacia atrás manteniéndola estirada.',
+      },
+    ],
   },
   {
+    id: '4526781931',
     day: 'Día 4',
     type: 'Pesas + Movilidad y Estiramientos Funcionales',
     exercises: [
@@ -260,7 +263,7 @@ export const dataMock = [
         repetitions: '5 min',
         weight: '-',
         type: 'estiramiento',
-        muscle: 'cuerpo completo'
+        muscle: 'cuerpo completo',
       },
       {
         name: 'Sentadilla frontal con barra',
@@ -269,7 +272,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'cuádriceps, core',
-        comment: 'Mejora la fuerza en piernas y core.'
+        comment: 'Mejora la fuerza en piernas y core.',
       },
       {
         name: 'Press militar con mancuernas',
@@ -278,7 +281,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'hombros, tríceps',
-        comment: 'Trabaja hombros y estabilizadores.'
+        comment: 'Trabaja hombros y estabilizadores.',
       },
       {
         name: 'Abductores en máquina',
@@ -287,8 +290,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'abductores',
-        comment:
-          'Fortalece los abductores de cadera, útil para movimientos laterales en tenis.'
+        comment: 'Fortalece los abductores de cadera, útil para movimientos laterales en tenis.',
       },
       {
         name: 'Peso muerto con mancuernas',
@@ -297,7 +299,7 @@ export const dataMock = [
         weight: 'Moderado',
         type: 'fuerza',
         muscle: 'glúteos, isquiotibiales, espalda baja',
-        comment: 'Fortalece glúteos, isquiotibiales y espalda baja.'
+        comment: 'Fortalece glúteos, isquiotibiales y espalda baja.',
       },
       {
         name: 'Estiramiento de Cuádriceps (de pie)',
@@ -306,7 +308,7 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'cuádriceps',
-        comment: 'Mantén las rodillas juntas y siente el estiramiento.'
+        comment: 'Mantén las rodillas juntas y siente el estiramiento.',
       },
       {
         name: 'Estiramiento de Hombros y Trapecios',
@@ -315,8 +317,8 @@ export const dataMock = [
         weight: '-',
         type: 'estiramiento',
         muscle: 'hombros, trapecios',
-        comment: 'Lleva el brazo cruzado sobre el pecho.'
-      }
-    ]
-  }
+        comment: 'Lleva el brazo cruzado sobre el pecho.',
+      },
+    ],
+  },
 ];

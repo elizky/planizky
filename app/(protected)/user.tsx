@@ -15,12 +15,12 @@ import { auth, signOut } from '@/auth';
 export async function User() {
   let session = await auth();
   let user = session?.user;
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={user?.image ?? '/pattern-extra-5.jpg'}
             width={36}
             height={36}
@@ -32,15 +32,15 @@ export async function User() {
       <DropdownMenuContent align='end'>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem className='cursor-pointer'>Settings</DropdownMenuItem>
+        <DropdownMenuItem className='cursor-pointer'>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         {user ? (
           <DropdownMenuItem>
             <form
               action={async () => {
                 'use server';
-                await signOut();
+                await signOut({ redirectTo: '/' });
               }}
             >
               <button type='submit'>Sign Out</button>

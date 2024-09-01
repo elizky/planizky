@@ -50,8 +50,8 @@ const RegisterForm = () => {
     });
   }
 
-  const handleLoginGoogle = async () => {
-    await signIn('google');
+  const handleLoginGoogle = () => {
+    signIn('google');
   };
 
   return (
@@ -121,7 +121,7 @@ const RegisterForm = () => {
                 </Button>
               </div>
               <div className='mt-4 text-center text-sm'>
-                Already have an account? {' '}
+                Already have an account?{' '}
                 <Link href='/login' className='underline'>
                   Sign in
                 </Link>
