@@ -8,14 +8,17 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Dumbbell, Clock } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Label } from '../ui/label';
-import { TrainingDay } from '@/types/types';
+import { Plan } from '@/types/types';
 
-export default function DashboardComponent({ data }: { data: TrainingDay[] }) {
-  const trainingDays = data.map(({ day, type, id }) => ({
+export default function DashboardComponent({ data }: { data: Plan }) {
+  console.log('PLAN====================>', data);
+
+  const trainingDays = data.trainingDays.map(({ id, title, type }) => ({
     id,
-    day,
+    title,
     type,
   }));
+
   const router = useRouter();
   const [completedDays, setCompletedDays] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
@@ -57,13 +60,13 @@ export default function DashboardComponent({ data }: { data: TrainingDay[] }) {
           className='grid sm:grid-cols-2 gap-4'
         >
           {trainingDays.map((day) => (
-            <div key={day.day}>
+            <div key={day.id}>
               <RadioGroupItem value={day.id} id={day.id} className='peer sr-only' />
               <Label
                 htmlFor={day.id}
                 className='flex flex-col items-center justify-start text-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-muted hover:text-primary peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary h-28 cursor-pointer'
               >
-                <span className='text-lg font-semibold'>{day.day}</span>
+                <span className='text-lg font-semibold'>{day.title}</span>
                 <span className='text-sm text-muted-foreground'>{day.type}</span>
               </Label>
             </div>
@@ -110,7 +113,7 @@ export default function DashboardComponent({ data }: { data: TrainingDay[] }) {
               </div>
             </CardContent>
           </Card>
-          {/* other staff */}
+          {/* detailed statistics */}
           <div className='grid gap-4 md:grid-cols-2 mb-8 sm:w-1/2'>
             <Card>
               <CardHeader>

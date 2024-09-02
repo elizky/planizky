@@ -1,6 +1,5 @@
-import { TrainingDay } from '@/types/types';
 
-export const dataMock: TrainingDay[] = [
+export const dataMock = [
   {
     id: '1278930123',
     day: 'Día 1',
