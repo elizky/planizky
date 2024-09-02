@@ -18,14 +18,11 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from '@/components/ui/use-toast';
-import { dataMock } from '@/lib/dataMock';
 import { TrainingDay } from '@/types/types';
 
-export default function TrainingDayComponent({ trainingDay }: any) {
+export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
   const router = useRouter();
-  const selectedDay = dataMock.find((day) => day.id === trainingDay) || dataMock[0];
-
-  const [completedSeries, setCompletedSeries] = useState<{ [key: string]: boolean[] }>({});
+  const [completedSets, setCompletedSets] = useState<{ [key: string]: boolean[] }>({});
   const [progress, setProgress] = useState(0);
   const [isDayCompleted, setIsDayCompleted] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
@@ -33,36 +30,30 @@ export default function TrainingDayComponent({ trainingDay }: any) {
   const [activeTab, setActiveTab] = useState('exercise');
 
   useEffect(() => {
-    const initialCompletedSeries: { [key: string]: boolean[] } = {};
-    selectedDay.exercises.forEach((exercise, index) => {
-      initialCompletedSeries[`${selectedDay.day}-${index}`] = new Array(exercise.series).fill(
-        false
-      );
+    const initialCompletedSets: { [key: string]: boolean[] } = {};
+    data.exercises.forEach((exercise) => {
+      initialCompletedSets[exercise.id] = new Array(exercise.sets.length).fill(false);
     });
-    setCompletedSeries(initialCompletedSeries);
+    setCompletedSets(initialCompletedSets);
     setIsDayCompleted(false);
     setStartTime(new Date());
     setCurrentExerciseIndex(0);
-  }, [selectedDay]);
+  }, [data]);
 
   useEffect(() => {
-    const totalSeries = selectedDay.exercises.reduce(
-      (total, exercise) => total + exercise.series,
-      0
-    );
-    const completedSeriesCount = Object.values(completedSeries).flat().filter(Boolean).length;
-    const newProgress = (completedSeriesCount / totalSeries) * 100;
+    const totalSets = data.exercises.reduce((total, exercise) => total + exercise.sets.length, 0);
+    const completedSetsCount = Object.values(completedSets).flat().filter(Boolean).length;
+    const newProgress = (completedSetsCount / totalSets) * 100;
     setProgress(newProgress);
     setIsDayCompleted(newProgress === 100);
-  }, [completedSeries, selectedDay]);
+  }, [completedSets, data]);
 
-  const handleSeriesComplete = (exerciseIndex: number, seriesIndex: number) => {
-    const exerciseKey = `${selectedDay.day}-${exerciseIndex}`;
-    const updatedSeries = [...completedSeries[exerciseKey]];
-    updatedSeries[seriesIndex] = !updatedSeries[seriesIndex];
-    setCompletedSeries({ ...completedSeries, [exerciseKey]: updatedSeries });
+  const handleSetComplete = (exerciseId: string, setIndex: number) => {
+    const updatedSets = [...completedSets[exerciseId]];
+    updatedSets[setIndex] = !updatedSets[setIndex];
+    setCompletedSets({ ...completedSets, [exerciseId]: updatedSets });
 
-    if (updatedSeries.every(Boolean)) {
+    if (updatedSets.every(Boolean)) {
       handleNextExercise();
     }
   };
@@ -74,35 +65,21 @@ export default function TrainingDayComponent({ trainingDay }: any) {
       const completedDays = parseInt(localStorage.getItem('completedDays') || '0') + 1;
       const totalTime = parseInt(localStorage.getItem('totalTime') || '0') + duration;
 
-      console.log('totalTime', totalTime);
-
       localStorage.setItem('completedDays', completedDays.toString());
       localStorage.setItem('totalTime', totalTime.toString());
 
-      // Update chart data
-      const storedChartData = JSON.parse(localStorage.getItem('chartData') || '[]');
-      const newChartData = [
-        ...storedChartData,
-        {
-          day: selectedDay.day,
-          completedExercises: selectedDay.exercises.length,
-          timeSpent: Math.round(duration / 60), // Convert to minutes
-        },
-      ];
-      localStorage.setItem('chartData', JSON.stringify(newChartData));
-
       toast({
         title: '¡Entrenamiento completado!',
-        description: `Has completado el ${
-          selectedDay.day
-        } de tu plan de entrenamiento en ${Math.round(duration)} segundos.`,
+        description: `Has completado el ${data.title} de tu plan de entrenamiento en ${Math.round(
+          duration
+        )} segundos.`,
       });
       router.push('/dashboard');
     }
   };
 
   const handleNextExercise = () => {
-    if (currentExerciseIndex < selectedDay.exercises.length - 1) {
+    if (currentExerciseIndex < data.exercises.length - 1) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
     }
   };
@@ -114,35 +91,34 @@ export default function TrainingDayComponent({ trainingDay }: any) {
   };
 
   const handleSelectExercise = (index: number) => {
-    if (isExerciseCompleted(index)) return;
+    if (isExerciseCompleted(data.exercises[index].id)) return;
     setCurrentExerciseIndex(index);
     setActiveTab('exercise');
   };
 
-  const getExerciseIcon = (type: string) => {
-    switch (type) {
+  const getExerciseIcon = (category: string) => {
+    switch (category.toLowerCase()) {
       case 'cardio':
         return <Zap className='w-6 h-6' />;
-      case 'fuerza':
+      case 'strength':
         return <Dumbbell className='w-6 h-6' />;
       default:
         return <Clock className='w-6 h-6' />;
     }
   };
 
-  const isExerciseCompleted = (exerciseIndex: number) => {
-    const exerciseKey = `${selectedDay.day}-${exerciseIndex}`;
-    return completedSeries[exerciseKey]?.every(Boolean) || false;
+  const isExerciseCompleted = (exerciseId: string) => {
+    return completedSets[exerciseId]?.every(Boolean) || false;
   };
 
-  const isAllExercisesCompleted = selectedDay.exercises.every((_, index) =>
-    isExerciseCompleted(index)
+  const isAllExercisesCompleted = data.exercises.every((exercise) =>
+    isExerciseCompleted(exercise.id)
   );
 
   return (
     <div className='container mx-auto p-4 max-w-3xl'>
       <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-3xl font-bold'>{selectedDay.type}</h1>
+        <h1 className='text-3xl font-bold'>{data.title}</h1>
         <Button
           variant='outline'
           size='icon'
@@ -169,7 +145,7 @@ export default function TrainingDayComponent({ trainingDay }: any) {
           <p className='text-sm text-muted-foreground text-center'>
             {Math.round(progress)}% completado
           </p>
-          <p className='mt-4 text-sm'>{selectedDay.circuit_info}</p>
+          <p className='mt-4 text-sm'>{data.description}</p>
           {isDayCompleted && (
             <Button onClick={handleFinishDay} className='w-full mt-4'>
               Finalizar Día de Entrenamiento
@@ -187,55 +163,38 @@ export default function TrainingDayComponent({ trainingDay }: any) {
           <Card>
             <CardHeader>
               <CardTitle className='flex items-center justify-between capitalize'>
-                <span>{selectedDay.exercises[currentExerciseIndex].name}</span>
-                {getExerciseIcon(selectedDay.exercises[currentExerciseIndex].type)}
+                <span>{data.exercises[currentExerciseIndex].title}</span>
+                {getExerciseIcon(data.exercises[currentExerciseIndex].category)}
               </CardTitle>
               <CardDescription className='capitalize'>
-                {selectedDay.exercises[currentExerciseIndex].muscle}
+                {data.exercises[currentExerciseIndex].muscleGroup}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className='grid grid-cols-2 gap-4 mb-4'>
-                <div>
-                  <p className='text-sm font-medium'>Peso</p>
-                  <p className='text-2xl font-bold'>
-                    {selectedDay.exercises[currentExerciseIndex].weight}
-                  </p>
-                </div>
-                <div>
-                  <p className='text-sm font-medium'>Tipo</p>
-                  <p className='text-2xl font-bold capitalize'>
-                    {selectedDay.exercises[currentExerciseIndex].type}
-                  </p>
-                </div>
-              </div>
-              <p className='text-sm mb-4'>{selectedDay.exercises[currentExerciseIndex].comment}</p>
-              <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 mb-12'>
-                {Array.from({ length: selectedDay.exercises[currentExerciseIndex].series }).map(
-                  (_, seriesIndex) => {
-                    const isCompleted =
-                      completedSeries[`${selectedDay.day}-${currentExerciseIndex}`]?.[
-                        seriesIndex
-                      ] || false;
-                    return (
-                      <button
-                        key={seriesIndex}
-                        onClick={() => handleSeriesComplete(currentExerciseIndex, seriesIndex)}
-                        className={`p-4 rounded-lg text-center transition-colors ${
-                          isCompleted
-                            ? 'bg-green-500 text-white hover:bg-green-600'
-                            : 'bg-muted hover:outline hover:outline-primary'
-                        }`}
-                      >
-                        <span className='text-lg font-semibold block'>Serie {seriesIndex + 1}</span>
-                        <span className='text-lg font-semibold block'>
-                          Repeticiones: {selectedDay.exercises[currentExerciseIndex].repetitions}
-                        </span>
-                        <span className='text-sm'>{isCompleted ? 'Completada' : 'Pendiente'}</span>
-                      </button>
-                    );
-                  }
-                )}
+              <p className='text-sm mb-4'>{data.exercises[currentExerciseIndex].description}</p>
+              <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mb-12'>
+                {data.exercises[currentExerciseIndex].sets.map((set, setIndex) => {
+                  const isCompleted =
+                    completedSets[data.exercises[currentExerciseIndex].id]?.[setIndex] || false;
+                  return (
+                    <button
+                      key={set.id}
+                      onClick={() =>
+                        handleSetComplete(data.exercises[currentExerciseIndex].id, setIndex)
+                      }
+                      className={`p-4 rounded-lg text-center transition-colors ${
+                        isCompleted
+                          ? 'bg-green-500 text-white hover:bg-green-600'
+                          : 'bg-muted hover:outline hover:outline-primary'
+                      }`}
+                    >
+                      <span className='text-lg font-semibold block'>Serie {setIndex + 1}</span>
+                      <span className='text-sm block'>Reps: {set.repetitions}</span>
+                      <span className='text-sm block'>Peso: {set.weight}kg</span>
+                      <span className='text-sm'>{isCompleted ? 'Completada' : 'Pendiente'}</span>
+                    </button>
+                  );
+                })}
               </div>
               <div className='flex justify-between'>
                 {!isAllExercisesCompleted && (
@@ -246,8 +205,7 @@ export default function TrainingDayComponent({ trainingDay }: any) {
                 <Button
                   onClick={isAllExercisesCompleted ? handleFinishDay : handleNextExercise}
                   disabled={
-                    currentExerciseIndex === selectedDay.exercises.length - 1 &&
-                    !isAllExercisesCompleted
+                    currentExerciseIndex === data.exercises.length - 1 && !isAllExercisesCompleted
                   }
                   className={`ml-auto ${isAllExercisesCompleted && 'w-full'} `}
                 >
@@ -265,16 +223,16 @@ export default function TrainingDayComponent({ trainingDay }: any) {
         </TabsContent>
         <TabsContent value='all'>
           <div className='space-y-4'>
-            {selectedDay.exercises.map((exercise, index) => (
+            {data.exercises.map((exercise, index) => (
               <motion.div
-                key={index}
+                key={exercise.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
                 <Card
                   className={`cursor-pointer transition-colors ${
-                    isExerciseCompleted(index)
+                    isExerciseCompleted(exercise.id)
                       ? 'bg-green-500'
                       : 'hover:bg-muted hover:border hover:border-primary'
                   }`}
@@ -282,28 +240,27 @@ export default function TrainingDayComponent({ trainingDay }: any) {
                 >
                   <CardHeader>
                     <CardTitle className='flex items-center justify-between'>
-                      <span>{exercise.name}</span>
-                      {getExerciseIcon(exercise.type)}
+                      <span>{exercise.title}</span>
+                      {getExerciseIcon(exercise.category)}
                     </CardTitle>
-                    <CardDescription>{exercise.muscle}</CardDescription>
+                    <CardDescription>{exercise.muscleGroup}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className='grid grid-cols-2 gap-4 mb-4'>
                       <div>
                         <p className='text-sm font-medium'>Series</p>
-                        <p className='text-xl font-bold'>{exercise.series}</p>
+                        <p className='text-xl font-bold'>{exercise.sets.length}</p>
                       </div>
                       <div>
                         <p className='text-sm font-medium'>Repeticiones</p>
-                        <p className='text-xl font-bold'>{exercise.repetitions}</p>
+                        <p className='text-xl font-bold'>{exercise.sets[0].repetitions}</p>
                       </div>
                     </div>
-                    <p className='text-sm mb-2'>{exercise.comment}</p>
+                    <p className='text-sm mb-2'>{exercise.description}</p>
                     <Progress
                       value={
-                        ((completedSeries[`${selectedDay.day}-${index}`]?.filter(Boolean).length ||
-                          0) /
-                          exercise.series) *
+                        ((completedSets[exercise.id]?.filter(Boolean).length || 0) /
+                          exercise.sets.length) *
                         100
                       }
                       className='h-2'

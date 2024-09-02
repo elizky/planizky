@@ -1,17 +1,88 @@
-export type Exercise = {
-  name: string;
-  series: number;
-  repetitions: string | number;
-  weight: string;
-  type: string;
-  muscle: string;
-  comment?: string;
-};
+// types.ts
 
-export type TrainingDay = {
+export interface Comment {
   id: string;
-  day: string;
+  content: string;
+  userId: string;
+  exerciseId: string | null;
+  trainingDayId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Set {
+  id: string;
+  exerciseId: string;
+  repetitions: number;
+  weight: number | null;
+  duration: number;
+  restTime: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Exercise {
+  id: string;
+  trainingDayId: string | null; // Ajusta aquí
+  title: string;
+  description: string | null; // Ajusta aquí
+  category: string;
+  muscleGroup: string;
+  createdAt: Date;
+  updatedAt: Date;
+  sets: Set[];
+  comments: Comment[];
+}
+
+export interface Progress {
+  id: string;
+  userId: string;
+  trainingDayId: string | null; // Ajusta aquí
+  date: Date;
+  weight: number | null; // Ajusta aquí
+  notes: string | null; // Ajusta aquí
+  stats: any; // Ajusta según sea necesario
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TrainingDay {
+  id: string;
+  planId: string;
+  title: string;
   type: string;
-  circuit_info?: string;
+  description: string | null; // Ajusta aquí
+  completedCount: number;
+  completionTimes: any[]; // Ajusta según sea necesario
+  completionDurations: any[]; // Ajusta según sea necesario
+  date: Date[];
+  createdAt: Date;
+  updatedAt: Date;
   exercises: Exercise[];
-};
+  comments: Comment[];
+  progress: Progress[];
+}
+
+export interface Plan {
+  id: string;
+  userId: string;
+  title: string;
+  description: string | null; // Ajusta aquí
+  isActive: boolean;
+  startDate: Date;
+  endDate: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  trainingDays: TrainingDay[];
+  user: {
+    id: string;
+    name: string | null; // Ajusta aquí
+    email: string;
+    emailVerified: Date | null;
+    password: string | null;
+    image: string | null;
+    role: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}
