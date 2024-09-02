@@ -8,10 +8,9 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Dumbbell, Clock } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Label } from '../ui/label';
-import { dataMock } from '@/lib/dataMock';
+import { TrainingDay } from '@/types/types';
 
-export default function DashboardComponent() {
-  const data = dataMock;
+export default function DashboardComponent({ data }: { data: TrainingDay[] }) {
   const trainingDays = data.map(({ day, type, id }) => ({
     id,
     day,
