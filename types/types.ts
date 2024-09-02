@@ -15,8 +15,8 @@ export interface Set {
   exerciseId: string;
   repetitions: number;
   weight: number | null;
-  duration: number;
-  restTime: number;
+  duration: number | null;
+  restTime: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
