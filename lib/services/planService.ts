@@ -54,6 +54,15 @@ export async function updatePlan(planId: string, data: Partial<Plan>): Promise<P
     data,
   });
 }
+// Actualizar un plan
+export async function updateActivePlan(planId: string, data: Partial<Plan>): Promise<Plan> {
+  return await db.plan.update({
+    where: { id: planId },
+    data: {
+      isActive: data.isActive,
+    },
+  });
+}
 
 // Eliminar un plan
 export async function deletePlan(planId: string): Promise<Plan> {

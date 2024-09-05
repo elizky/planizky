@@ -115,6 +115,11 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
     isExerciseCompleted(exercise.id)
   );
 
+  const handleTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    return time > 60 ? `${minutes} min` : `${time} seg`;
+  };
+
   return (
     <div className='container mx-auto p-4 max-w-3xl'>
       <div className='flex justify-between items-center mb-6'>
@@ -174,6 +179,7 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
               <p className='text-sm mb-4'>{data.exercises[currentExerciseIndex].description}</p>
               <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mb-12'>
                 {data.exercises[currentExerciseIndex].sets.map((set, setIndex) => {
+                  console.log('set', set);
                   const isCompleted =
                     completedSets[data.exercises[currentExerciseIndex].id]?.[setIndex] || false;
                   return (
@@ -189,9 +195,17 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
                       }`}
                     >
                       <span className='text-lg font-semibold block'>Serie {setIndex + 1}</span>
-                      <span className='text-sm block'>Reps: {set.repetitions}</span>
-                      <span className='text-sm block'>Peso: {set.weight}kg</span>
-                      <span className='text-sm'>{isCompleted ? 'Completada' : 'Pendiente'}</span>
+                      <span className='text-sm block'>
+                        Reps: {set.repetitions > 0 ? set.repetitions : '-'}
+                      </span>
+                      <span className='text-sm block'>
+                        Peso: {set.weight && set.weight > 0 ? `${set.weight} kg` : '-'}
+                      </span>
+                      <span className='text-sm block'>
+                        Duracion:{' '}
+                        {set.duration && set.duration > 0 ? handleTime(set.duration) : '-'}
+                      </span>
+                      {/* <span className='text-sm'>{isCompleted ? 'Completada' : 'Pendiente'}</span> */}
                     </button>
                   );
                 })}
