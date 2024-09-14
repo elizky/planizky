@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Dumbbell, Home, PanelLeft } from 'lucide-react';
+import { LayoutDashboard, PanelLeft, Text } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 import { User } from './user';
 import Providers from './providers';
+import PlanizkyIcon from '@/components/PlanizkyIcon';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,10 +15,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className='flex min-h-screen w-full flex-col bg-muted/40'>
         <div className='flex flex-col sm:gap-4  '>
           <header
-            className='container sticky top-0 z-30 flex h-14 justify-between sm:justify-end items-center gap-4 border-b 
+            className='container sticky top-0 z-30 flex h-14 justify-between items-center gap-4 border-b 
           bg-gradient-to-b from-white dark:from-black to-muted/10 
           sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 sm:py-4'
           >
+            <NavBar />
             <MobileNav />
             <User />
           </header>
@@ -34,8 +36,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 const menuData = [
   {
     title: 'Dashboard',
-    icon: <Home className='h-6 w-6 xl:h-4 xl:w-4' />,
+    icon: <LayoutDashboard className='h-6 w-6 xl:h-4 xl:w-4' />,
     linkTo: '/dashboard',
+  },
+  {
+    title: 'My Gym Plans',
+    icon: <Text className='h-6 w-6 xl:h-4 xl:w-4' />,
+    linkTo: '/gym-plans',
   },
 ];
 
@@ -50,7 +57,7 @@ function MobileNav() {
       </SheetTrigger>
       <SheetContent side='left' className='sm:max-w-xs'>
         <nav className='grid gap-6 text-lg font-medium'>
-          <Dumbbell className='h-5 w-5 transition-all group-hover:scale-110' />
+          <PlanizkyIcon className='h-6 w-6' />
           <span className='sr-only'>Planizky</span>
           {menuData.map((menu) => (
             <SheetClose key={`${menu.title}-mobile`} asChild>
@@ -66,5 +73,28 @@ function MobileNav() {
         </nav>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function NavBar() {
+  return (
+    <nav className='hidden flex-col gap-6 text-lg font-medium sm:flex sm:flex-row sm:items-center sm:gap-5 sm:text-sm lg:gap-6'>
+      <Link
+        href='/dashboard'
+        className='flex items-center gap-2 text-lg font-semibold md:text-base'
+      >
+        <PlanizkyIcon className='h-6 w-6' />
+        <span className='sr-only'>Acme Inc</span>
+      </Link>
+      {menuData.map((menu) => (
+        <Link
+          key={menu.title}
+          href={menu.linkTo}
+          className='text-muted-foreground transition-colors hover:text-foreground'
+        >
+          {menu.title}
+        </Link>
+      ))}
+    </nav>
   );
 }

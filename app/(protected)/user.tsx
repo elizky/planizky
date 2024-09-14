@@ -13,15 +13,16 @@ import Link from 'next/link';
 import { auth, signOut } from '@/auth';
 
 export async function User() {
-  let session = await auth();
-  let user = session?.user;
+  const session = await auth();
+  const user = session?.user;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={user?.image ?? '/pattern-extra-5.jpg'}
+            src={user?.image || '/pattern-extra-5.jpg'}
             width={36}
             height={36}
             alt='Avatar'
