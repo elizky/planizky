@@ -29,7 +29,7 @@ export const trainingDaySchema = z.object({
 export const planSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
-  trainingDaysCount: z.string().min(1, 'At least one day is required'),
+  trainingDaysCount: z.number().min(1, 'At least one day is required'),
   trainingDays: z.array(trainingDaySchema).min(1, 'At least one training day is required'),
 });
 

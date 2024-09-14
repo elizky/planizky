@@ -1,3 +1,4 @@
+import CreatePlanPage from "@/components/Plan/Create/CreatePlan";
 
 const CreatePlan = () => {
   return (
@@ -5,7 +6,7 @@ const CreatePlan = () => {
       <h1 className='scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl pb-8'>
         Create Gym Training Plan
       </h1>
-  
+      <CreatePlanPage />
     </div>
   );
 };
