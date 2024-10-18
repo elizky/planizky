@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Accordion } from '@/components/ui/accordion';
 import { planSchema, PlanSchema } from '@/types/formSchemas';
 import TrainingDay from '../TrainingDay';
+import { emptyTrainingDay } from '@/types/types';
 
 export default function EditPlanPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +68,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
     const currentDaysCount = trainingDayFields.length;
     if (trainingDaysCount > currentDaysCount) {
       for (let i = currentDaysCount; i < trainingDaysCount; i++) {
-        appendTrainingDay({ exercises: [{ sets: [{}] }] });
+        appendTrainingDay(emptyTrainingDay);
       }
     } else if (trainingDaysCount < currentDaysCount && trainingDaysCount >= 1) {
       for (let i = currentDaysCount - 1; i >= trainingDaysCount; i--) {

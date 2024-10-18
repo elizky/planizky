@@ -559,7 +559,7 @@ export const dataMockForSeed = {
 export const emptyMockData: PlanSchema = {
   title: '',
   description: '',
-  trainingDaysCount: '1',
+  trainingDaysCount: 1,
   trainingDays: [
     {
       title: '',
