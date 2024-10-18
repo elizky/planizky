@@ -86,3 +86,25 @@ export interface Plan {
     updatedAt: Date;
   };
 }
+
+export const emptyTrainingDay = {
+  title: '', // Campo obligatorio
+  type: '', // Campo obligatorio
+  description: '', // Campo opcional
+  exercises: [
+    {
+      title: '', // Campo obligatorio
+      category: '', // Campo obligatorio
+      muscleGroup: '', // Campo obligatorio
+      sets: [
+        {
+          repetitions: 0, // Valor por defecto requerido
+          weight: 0, // O puedes inicializar con undefined si es opcional
+          duration: undefined, // O valor por defecto si aplica
+          restTime: undefined, // O valor por defecto si aplica
+        },
+      ],
+      description: '', // Campo opcional
+    },
+  ],
+};

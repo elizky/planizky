@@ -7,6 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -19,7 +20,11 @@ import {
 } from '@/components/ui/table';
 import { Plan } from '@/types/types';
 import Link from 'next/link';
+import { handleActivate } from '@/actions/dashboard-actions';
 export default function PlanTable({ plans }: { plans: Plan[] }) {
+  
+  const activePlan = plans.find((plan) => plan.isActive) || plans[0];
+
   return (
     <Card>
       <CardContent>
@@ -56,10 +61,18 @@ export default function PlanTable({ plans }: { plans: Plan[] }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align='end'>
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className='cursor-pointer'
+                        onClick={async () => handleActivate(plan.id, activePlan)}
+                      >
+                        Activate
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <Link href={`/gym-plans/${plan.id}`}>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem className='cursor-pointer'>Edit</DropdownMenuItem>
                       </Link>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem className='cursor-pointer'>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

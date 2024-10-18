@@ -6,19 +6,30 @@ import { useRouter } from 'next/navigation';
 import { Plan } from '@/types/types';
 import DayPicker from './components/DayPicker';
 import Stats from './components/Stats';
+import ModalTrainingDay from './ModalTrainingDay';
 
 export default function DashboardComponent({ data }: { data: Plan[] }) {
+  const [openModal, setOpenModal] = useState(false);
+
   const activePlan = data.find((plan) => plan.isActive) || data[0];
 
-  const trainingDays = activePlan.trainingDays.map(({ id, title, type }) => ({
-    id,
-    title,
-    type,
-  }));
+  const trainingDays = activePlan.trainingDays.map(
+    ({ id, title, description, type, exercises }) => ({
+      id,
+      title,
+      description,
+      type,
+      exercises,
+    })
+  );
 
   const router = useRouter();
 
   const [selectedDay, setSelectedDay] = useState(trainingDays[0].id);
+
+  const dayInfo = trainingDays
+    .filter((day) => day.id === selectedDay)
+    .map(({ exercises, title, description }) => ({ exercises, title, description }))[0];
 
   const handleStartTraining = () => {
     router.push(`/training/${selectedDay}`);
@@ -27,7 +38,8 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
   return (
     <div className='space-y-8'>
       <h3>
-        Estas con el plan <span className='font-bold underline underline-offset-4'>{activePlan.title}</span>
+        Estas con el plan{' '}
+        <span className='font-bold underline underline-offset-4'>{activePlan.title}</span>
       </h3>
       {/* select training day */}
       <DayPicker
@@ -35,9 +47,18 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
         setSelectedDay={setSelectedDay}
         trainingDays={trainingDays}
         handleStartTraining={handleStartTraining}
+        dayInfo={dayInfo}
+        setOpenModal={setOpenModal}
       />
       {/* statistics */}
-      <Stats totalTrainingData={data} activePlan={activePlan} />
+      <Stats />
+      {/* modal */}
+      <ModalTrainingDay
+        open={openModal}
+        handleClose={setOpenModal}
+        dayInfo={dayInfo}
+        handleStartTraining={handleStartTraining}
+      />
     </div>
   );
 }

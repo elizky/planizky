@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import DayInfo from '../DayInfo';
+import { Exercise } from '@prisma/client';
 
 interface DayPickerProps {
   selectedDay: string;
@@ -11,6 +13,8 @@ interface DayPickerProps {
     type: string;
   }[];
   handleStartTraining: () => void;
+  dayInfo: { exercises: Exercise[]; title: string; description: string | null };
+  setOpenModal: any;
 }
 
 const DayPicker = ({
@@ -18,6 +22,8 @@ const DayPicker = ({
   setSelectedDay,
   trainingDays,
   handleStartTraining,
+  dayInfo,
+  setOpenModal,
 }: DayPickerProps) => {
   return (
     <div className='mb-8 space-y-4'>
@@ -27,7 +33,7 @@ const DayPicker = ({
       <RadioGroup
         value={selectedDay}
         onValueChange={setSelectedDay}
-        className='grid sm:grid-cols-2 gap-4'
+        className='grid grid-cols-2 sm:grid-cols-4 gap-4'
       >
         {trainingDays.map((day) => (
           <div key={day.id}>
@@ -42,6 +48,8 @@ const DayPicker = ({
           </div>
         ))}
       </RadioGroup>
+      <DayInfo dayInfo={dayInfo} setOpenModal={setOpenModal} />
+
       <div className='pt-8'>
         <Button onClick={handleStartTraining} size='lg' className='w-full'>
           Comenzar Entrenamiento
