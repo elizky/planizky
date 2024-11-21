@@ -1,41 +1,81 @@
-import { auth } from '@/auth';
-import { Button } from '@/components/ui/button';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { auth } from '@/auth';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Clock, Dumbbell, Shield, Target } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Home | Planizky ',
 };
+
 const Home = async () => {
   const session = await auth();
   console.log('session', session);
   return (
-    <div className='bg-cover bg-no-repeat bg-landing-pattern '>
-      <div className='flex min-h-screen flex-col items-center justify-center container'>
-        <div className='flex flex-col items-center gap-12 bg-white/90 dark:bg-black/90 p-12 lg:py-20 rounded-2xl shadow-2xl'>
-          <div className='text-center'>
-            <h1 className='scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl'>
-              Welcome to Planizky
-            </h1>
-            <p className='leading-7 [&:not(:first-child)]:mt-6'>
-              Track your gym sessions each day and have statistics from your plan
-            </p>
+    <div className='min-h-screen bg-gradient-to-r from-slate-900 to-slate-700'>
+      <div className='container mx-auto px-4'>
+        {/* Hero Section */}
+        <nav className='py-6 flex justify-between items-center'>
+          <div className='flex items-center gap-2'>
+            <Dumbbell className='h-6 w-6' />
+            <span className='font-bold text-xl'>GymTrack</span>
           </div>
-          {session ? (
-            <Link href='/dashboard'>
-              <Button className='w-full'>Go to dashboard {session.user.name}</Button>
+          <div className='space-x-4'>
+            <Link href='/login'>
+              <Button variant='ghost'>Login</Button>
             </Link>
-          ) : (
-            <div className='flex gap-4'>
-              <Link href='/login'>
-                <Button className='w-24'>Login</Button>
-              </Link>
-              <Link href='/register'>
-                <Button className='w-24'>Register</Button>
-              </Link>
+            <Link href='/register'>
+              <Button>Get Started</Button>
+            </Link>
+          </div>
+        </nav>
+        <main className='py-20'>
+          <div className='max-w-3xl mx-auto text-center'>
+            <h1 className='text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80'>
+              Transform Your Fitness Journey
+            </h1>
+            <p className='text-xl text-muted-foreground mb-8'>
+              Track your workouts, monitor progress, and achieve your fitness goals with our
+              comprehensive gym tracking platform.
+            </p>
+            <Link href='/register'>
+              <Button size='lg' className='gap-2'>
+                Start Your Journey <ArrowRight className='h-4 w-4' />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Features */}
+          <div className='grid md:grid-cols-3 gap-8 mt-20'>
+            <div className='bg-card p-6 rounded-lg shadow-lg'>
+              <div className='h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4'>
+                <Target className='h-6 w-6 text-primary' />
+              </div>
+              <h3 className='text-xl font-semibold mb-2'>Goal Tracking</h3>
+              <p className='text-muted-foreground'>
+                Set and track your fitness goals with detailed progress monitoring.
+              </p>
             </div>
-          )}
-        </div>
+            <div className='bg-card p-6 rounded-lg shadow-lg'>
+              <div className='h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4'>
+                <Clock className='h-6 w-6 text-primary' />
+              </div>
+              <h3 className='text-xl font-semibold mb-2'>Workout History</h3>
+              <p className='text-muted-foreground'>
+                Keep a detailed log of all your workouts and track your improvements.
+              </p>
+            </div>
+            <div className='bg-card p-6 rounded-lg shadow-lg'>
+              <div className='h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4'>
+                <Shield className='h-6 w-6 text-primary' />
+              </div>
+              <h3 className='text-xl font-semibold mb-2'>Secure Data</h3>
+              <p className='text-muted-foreground'>
+                Your fitness data is safely stored and always accessible.
+              </p>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
