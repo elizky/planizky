@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -11,20 +11,11 @@ import {
   Home,
   ChevronLeft,
   ChevronRight,
-  Dumbbell,
-  Clock,
-  Zap,
   AlarmClock,
   Edit2,
-  Play,
-  Pause,
-  RotateCcw,
-  Flag,
-  Target,
-  Flame,
   HelpCircle,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 import { toast } from '@/components/ui/use-toast';
 import { TrainingDay, Exercise } from '@/types/types';
 import {
@@ -35,7 +26,8 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Timer } from 'lucide-react';
+import Timer from './TimerComponent';
+import ExerciseListItem from './ExerciseListItem';
 
 export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
   const router = useRouter();
@@ -45,8 +37,6 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('exercise');
-  const [timer, setTimer] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
@@ -136,34 +126,6 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
     return time > 60 ? `${minutes} min` : `${time} seg`;
   };
 
-  const startTimer = () => setIsRunning(true);
-  const pauseTimer = () => setIsRunning(false);
-  const resetTimer = useCallback(() => {
-    setIsRunning(false);
-    setTimer(0);
-  }, []);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer + 10);
-      }, 10);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isRunning, timer]);
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60000);
-    const seconds = Math.floor((time % 60000) / 1000);
-    const milliseconds = time % 1000;
-    return `${minutes.toString().padStart(2, '0')}:${seconds
-      .toString()
-      .padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
-  };
-
   const addComment = () => {
     if (newComment.trim() && currentExercise) {
       const updatedExercises = [...data.exercises];
@@ -175,6 +137,7 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
             id: Date.now().toString(),
             content: newComment,
             userId: 'current-user-id',
+            trainingDayId: data.id,
             exerciseId: currentExercise.id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -223,18 +186,7 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
         <CardDescription>{currentExercise?.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='flex justify-center items-center space-x-2 mb-4'>
-          <Timer className='w-5 h-5' />
-          <span className='text-2xl font-mono'>{formatTime(timer)}</span>
-          <Button size='icon' variant='outline' onClick={isRunning ? pauseTimer : startTimer}>
-            {isRunning ? <Pause className='h-4 w-4' /> : <Play className='h-4 w-4' />}
-          </Button>
-          <Button size='icon' variant='outline' onClick={resetTimer}>
-            <RotateCcw className='h-4 w-4' />
-          </Button>
-        </div>
-
-        <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mb-12'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4'>
           {currentExercise?.sets.map((set, setIndex) => {
             const isCompleted = completedSets[currentExercise.id]?.[setIndex] || false;
             return (
@@ -261,6 +213,14 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
             );
           })}
         </div>
+        {currentExercise?.sets.some((set) => set.duration && set.duration > 0) && (
+          <Timer
+            duration={currentExercise?.sets[0]?.duration || 30} // Duración predeterminada de la serie
+            onFinish={() =>
+              toast({ title: '¡Serie completada!', description: 'Continúa al siguiente set.' })
+            }
+          />
+        )}
         <div className='mt-4'>
           <h3 className='font-semibold mb-2'>Comentarios</h3>
           {currentExercise?.comments?.map((comment) => (
@@ -322,31 +282,7 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
           <Home className='h-4 w-4' />
         </Button>
       </div>
-
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='flex items-center justify-between'>
-            <span>Progreso del día</span>
-            {isDayCompleted ? (
-              <CheckCircle2 className='h-6 w-6 text-green-500' />
-            ) : (
-              <AlarmClock className='h-6 w-6' />
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Progress value={progress} className='w-full h-3 mb-2' />
-          <p className='text-sm text-muted-foreground text-center'>
-            {Math.round(progress)}% completado
-          </p>
-          <p className='mt-4 text-sm'>{data.description}</p>
-          {isDayCompleted && (
-            <Button onClick={handleFinishDay} className='w-full mt-4'>
-              Finalizar Día de Entrenamiento
-            </Button>
-          )}
-        </CardContent>
-      </Card>
+      <p className='my-4 text-sm'>{data.description}</p>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className='mb-6'>
         <TabsList className='grid w-full grid-cols-2'>
@@ -357,53 +293,37 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
         <TabsContent value='all'>
           <div className='space-y-4'>
             {data.exercises.map((exercise, index) => (
-              <motion.div
+              <ExerciseListItem
                 key={exercise.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-              >
-                <Card
-                  className={`cursor-pointer transition-colors ${
-                    isExerciseCompleted(exercise.id)
-                      ? 'bg-green-500'
-                      : 'hover:bg-muted hover:border hover:border-primary'
-                  }`}
-                  onClick={() => handleSelectExercise(index)}
-                >
-                  <CardHeader>
-                    <CardTitle className='flex items-center justify-between'>
-                      <span>{exercise.title}</span>
-                    </CardTitle>
-                    <CardDescription>{exercise.muscleGroup}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='grid grid-cols-2 gap-4 mb-4'>
-                      <div>
-                        <p className='text-sm font-medium'>Series</p>
-                        <p className='text-xl font-bold'>{exercise.sets.length}</p>
-                      </div>
-                      <div>
-                        <p className='text-sm font-medium'>Repeticiones</p>
-                        <p className='text-xl font-bold'>{exercise.sets[0].repetitions}</p>
-                      </div>
-                    </div>
-                    <p className='text-sm mb-2'>{exercise.description}</p>
-                    <Progress
-                      value={
-                        ((completedSets[exercise.id]?.filter(Boolean).length || 0) /
-                          exercise.sets.length) *
-                        100
-                      }
-                      className='h-2'
-                    />
-                  </CardContent>
-                </Card>
-              </motion.div>
+                exercise={exercise}
+                index={index}
+                isCompleted={isExerciseCompleted(exercise.id)}
+                completedSets={completedSets}
+                onSelect={handleSelectExercise}
+              />
             ))}
           </div>
         </TabsContent>
       </Tabs>
+      <div className='flex flex-col space-y-6'>
+        <CardTitle className='flex items-center justify-between'>
+          <span>Progreso del día</span>
+          {isDayCompleted ? (
+            <CheckCircle2 className='h-6 w-6 text-green-500' />
+          ) : (
+            <AlarmClock className='h-6 w-6' />
+          )}
+        </CardTitle>
+        <Progress value={progress} className='w-full h-3 mb-2' />
+        <p className='text-sm text-muted-foreground text-center'>
+          {Math.round(progress)}% completado
+        </p>
+        {isDayCompleted && (
+          <Button onClick={handleFinishDay} className='w-full mt-4'>
+            Finalizar Día de Entrenamiento
+          </Button>
+        )}
+      </div>
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent>
           <DialogHeader>

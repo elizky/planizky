@@ -41,7 +41,7 @@ const ModalTrainingDay = ({
                 <p className='text-sm'>
                   Reps:{' '}
                   {ex.sets.map((rep) => (
-                    <>{rep.repetitions} - </>
+                    <span key={rep.id}>{rep.repetitions} - </span>
                   ))}
                 </p>
               )}

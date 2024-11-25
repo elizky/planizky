@@ -1,5 +1,5 @@
 // types.ts
-export type TrainingType = 'series' | 'circuit' | 'combined';
+export type TrainingType = 'SERIES' | 'CIRCUIT' | 'COMBINED';
 export type Role = 'user' | 'admin';
 
 export interface User {
@@ -15,12 +15,13 @@ export interface User {
 }
 
 export interface Comment {
-  id: string;
   content: string;
-  userId: string;
-  exerciseId: string | null;
   createdAt: Date;
+  exerciseId: string | null;
+  id: string;
+  trainingDayId: string | null;
   updatedAt: Date;
+  userId: string;
 }
 
 export interface Set {
@@ -35,17 +36,16 @@ export interface Set {
 }
 
 export interface Exercise {
-  id: string;
-  trainingDayId: string;
-  title: string;
-  description: string | null;
   category: string;
-  muscleGroup: string;
-  type: TrainingType;
-  createdAt: Date;
-  updatedAt: Date;
-  sets: Set[];
   comments: Comment[];
+  createdAt: Date;
+  description: string | null;
+  id: string;
+  muscleGroup: string;
+  sets: Set[];
+  title: string;
+  trainingDayId: string;
+  updatedAt: Date;
 }
 
 export interface Progress {
@@ -106,7 +106,6 @@ export const emptyExercise: Exercise = {
   title: '',
   category: '',
   muscleGroup: '',
-  type: 'series',
   description: null,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -118,7 +117,7 @@ export const emptyTrainingDay: TrainingDay = {
   id: '',
   planId: '',
   title: '',
-  type: 'series',
+  type: 'SERIES',
   description: null,
   completedCount: 0,
   completionTimes: [],
