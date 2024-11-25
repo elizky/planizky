@@ -22,7 +22,6 @@ const page = async () => {
         Welcome {session.user.name}
       </h1>
       {data ? <DashboardComponent data={data} /> : <EmptyDashboard />}
-      <EmptyDashboard />
     </div>
   );
 };

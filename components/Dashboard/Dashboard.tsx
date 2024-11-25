@@ -13,15 +13,13 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
 
   const activePlan = data.find((plan) => plan.isActive) || data[0];
 
-  const trainingDays = activePlan.trainingDays.map(
-    ({ id, title, description, type, exercises }) => ({
-      id,
-      title,
-      description,
-      type,
-      exercises,
-    })
-  );
+  const trainingDays = activePlan.trainingDays.map(({ id, title, description, exercises }) => ({
+    id,
+    title,
+    description,
+
+    exercises,
+  }));
 
   const router = useRouter();
 
@@ -51,7 +49,7 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
         setOpenModal={setOpenModal}
       />
       {/* statistics */}
-      <Stats />
+      {/* <Stats /> */}
       {/* modal */}
       <ModalTrainingDay
         open={openModal}

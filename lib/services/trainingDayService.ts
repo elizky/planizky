@@ -33,8 +33,6 @@ export async function getTrainingDayById(trainingDayId: string): Promise<Trainin
           comments: true,
         },
       },
-      comments: true,
-      progress: true,
     },
   });
 }

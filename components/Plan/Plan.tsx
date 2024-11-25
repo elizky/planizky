@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
 
 import { Plan } from '@/types/types';
 import PlanTable from './Table';
+import { InputSearch } from '../ui/input-search';
 
 export default function PlanPage({ plans }: { plans: Plan[] }) {
   console.log('plans', plans);
@@ -65,7 +65,7 @@ export default function PlanPage({ plans }: { plans: Plan[] }) {
       </div>
 
       <div className='mb-6'>
-        <Input
+        <InputSearch
           placeholder='Search plans...'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

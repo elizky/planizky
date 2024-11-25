@@ -31,8 +31,6 @@ export async function getUserPlans(userEmail: string) {
               comments: true,
             },
           },
-          comments: true,
-          progress: true,
         },
       },
       user: true,

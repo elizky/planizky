@@ -1,11 +1,24 @@
 // types.ts
+export type TrainingType = 'series' | 'circuit' | 'combined';
+export type Role = 'user' | 'admin';
+
+export interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  emailVerified: Date | null;
+  password: string | null;
+  image: string | null;
+  role: Role;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export interface Comment {
   id: string;
   content: string;
   userId: string;
   exerciseId: string | null;
-  trainingDayId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,11 +36,12 @@ export interface Set {
 
 export interface Exercise {
   id: string;
-  trainingDayId: string | null; // Ajusta aquí
+  trainingDayId: string;
   title: string;
-  description: string | null; // Ajusta aquí
+  description: string | null;
   category: string;
   muscleGroup: string;
+  type: TrainingType;
   createdAt: Date;
   updatedAt: Date;
   sets: Set[];
@@ -37,11 +51,11 @@ export interface Exercise {
 export interface Progress {
   id: string;
   userId: string;
-  trainingDayId: string | null; // Ajusta aquí
+  trainingDayId: string | null;
   date: Date;
-  weight: number | null; // Ajusta aquí
-  notes: string | null; // Ajusta aquí
-  stats: any; // Ajusta según sea necesario
+  weight: number | null;
+  notes: string | null;
+  stats: Record<string, number>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,61 +64,66 @@ export interface TrainingDay {
   id: string;
   planId: string;
   title: string;
-  type: string;
-  description: string | null; // Ajusta aquí
+  type: TrainingType;
+  description: string | null;
   completedCount: number;
-  completionTimes: any[]; // Ajusta según sea necesario
-  completionDurations: any[]; // Ajusta según sea necesario
-  date: Date[];
+  completionTimes: number[];
+  completionDurations: number[];
   createdAt: Date;
   updatedAt: Date;
   exercises: Exercise[];
-  comments: Comment[];
-  progress: Progress[];
 }
 
 export interface Plan {
   id: string;
   userId: string;
   title: string;
-  description: string | null; // Ajusta aquí
+  description: string | null;
   isActive: boolean;
   startDate: Date;
   endDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
   trainingDays: TrainingDay[];
-  user: {
-    id: string;
-    name: string | null; // Ajusta aquí
-    email: string;
-    emailVerified: Date | null;
-    password: string | null;
-    image: string | null;
-    role: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  user: User;
 }
 
-export const emptyTrainingDay = {
-  title: '', // Campo obligatorio
-  type: '', // Campo obligatorio
-  description: '', // Campo opcional
-  exercises: [
-    {
-      title: '', // Campo obligatorio
-      category: '', // Campo obligatorio
-      muscleGroup: '', // Campo obligatorio
-      sets: [
-        {
-          repetitions: 0, // Valor por defecto requerido
-          weight: 0, // O puedes inicializar con undefined si es opcional
-          duration: undefined, // O valor por defecto si aplica
-          restTime: undefined, // O valor por defecto si aplica
-        },
-      ],
-      description: '', // Campo opcional
-    },
-  ],
+// Defaults
+export const emptySet: Set = {
+  id: '',
+  exerciseId: '',
+  repetitions: 0,
+  weight: null,
+  duration: null,
+  restTime: null,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+export const emptyExercise: Exercise = {
+  id: '',
+  trainingDayId: '',
+  title: '',
+  category: '',
+  muscleGroup: '',
+  type: 'series',
+  description: null,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  sets: [emptySet],
+  comments: [],
+};
+
+export const emptyTrainingDay: TrainingDay = {
+  id: '',
+  planId: '',
+  title: '',
+  type: 'series',
+  description: null,
+  completedCount: 0,
+  completionTimes: [],
+  completionDurations: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  exercises: [emptyExercise],
 };

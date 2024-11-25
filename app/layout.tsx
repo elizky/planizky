@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={work.className}>
         <ThemeProvider
           attribute='class'
-          defaultTheme='system'
+          defaultTheme='dark'
           enableSystem
           disableTransitionOnChange
         >
