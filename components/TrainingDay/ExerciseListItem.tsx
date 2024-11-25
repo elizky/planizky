@@ -7,17 +7,19 @@ interface ExerciseListItemProps {
   exercise: Exercise;
   index: number;
   isCompleted: boolean;
-  completedSets: { [key: string]: boolean[] };
   onSelect: (index: number) => void;
+  completedSets: { [key: string]: boolean[] };
 }
 
 export default function ExerciseListItem({
   exercise,
   index,
   isCompleted,
-  completedSets,
   onSelect,
+  completedSets,
 }: ExerciseListItemProps) {
+  const progress = ((completedSets[exercise.id]?.filter(Boolean).length || 0) / exercise.sets.length) * 100;
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,7 +28,7 @@ export default function ExerciseListItem({
     >
       <Card
         className={`cursor-pointer transition-colors ${
-          isCompleted ? 'bg-green-500' : 'hover:bg-muted hover:border hover:border-primary'
+          progress === 100 ? 'bg-green-500' : 'hover:bg-muted hover:border hover:border-primary'
         }`}
         onClick={() => onSelect(index)}
       >
@@ -49,10 +51,7 @@ export default function ExerciseListItem({
           </div>
           <p className='text-sm mb-2'>{exercise.description}</p>
           <Progress
-            value={
-              ((completedSets[exercise.id]?.filter(Boolean).length || 0) / exercise.sets.length) *
-              100
-            }
+            value={progress}
             className='h-2'
           />
         </CardContent>

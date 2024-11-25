@@ -22,6 +22,7 @@ export default function EditExerciseModal({
   exercise,
   onSetEdit,
 }: EditExerciseModalProps) {
+  console.log('exercise', exercise);
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>

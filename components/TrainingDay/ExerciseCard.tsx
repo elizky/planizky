@@ -16,10 +16,19 @@ interface ExerciseCardProps {
   data: TrainingDay;
   userId: string;
   onDayComplete: () => void;
+  onProgressChange?: (progress: number) => void;
+  completedSets: { [key: string]: boolean[] };
+  setCompletedSets: React.Dispatch<React.SetStateAction<{ [key: string]: boolean[] }>>;
 }
 
-export function ExerciseCard({ data, userId, onDayComplete }: ExerciseCardProps) {
-  const [completedSets, setCompletedSets] = useState<{ [key: string]: boolean[] }>({});
+export function ExerciseCard({ 
+  data, 
+  userId, 
+  onDayComplete, 
+  onProgressChange,
+  completedSets,
+  setCompletedSets 
+}: ExerciseCardProps) {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(data.exercises[0]);
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -34,18 +43,6 @@ export function ExerciseCard({ data, userId, onDayComplete }: ExerciseCardProps)
     userId
   );
 
-  // Initialize completed sets
-  useEffect(() => {
-    const initialCompletedSets: { [key: string]: boolean[] } = {};
-    data.exercises.forEach((exercise) => {
-      initialCompletedSets[exercise.id] = new Array(exercise.sets.length).fill(false);
-    });
-    setCompletedSets(initialCompletedSets);
-    setCurrentExerciseIndex(0);
-    setCurrentExercise(data.exercises[0]);
-    setStartTime(new Date());
-  }, [data]);
-
   // Check for all exercises completion
   useEffect(() => {
     const allCompleted = data.exercises.every((exercise) =>
@@ -53,6 +50,14 @@ export function ExerciseCard({ data, userId, onDayComplete }: ExerciseCardProps)
     );
     setIsAllExercisesCompleted(allCompleted);
   }, [completedSets, data.exercises]);
+
+  // Add this effect to calculate and emit progress
+  useEffect(() => {
+    const totalSets = data.exercises.reduce((total, exercise) => total + exercise.sets.length, 0);
+    const completedSetsCount = Object.values(completedSets).flat().filter(Boolean).length;
+    const newProgress = (completedSetsCount / totalSets) * 100;
+    onProgressChange?.(newProgress);
+  }, [completedSets, data.exercises, onProgressChange]);
 
   const handleTime = (time: number) => {
     const minutes = Math.floor(time / 60);
