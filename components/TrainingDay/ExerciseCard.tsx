@@ -21,13 +21,13 @@ interface ExerciseCardProps {
   setCompletedSets: React.Dispatch<React.SetStateAction<{ [key: string]: boolean[] }>>;
 }
 
-export function ExerciseCard({ 
-  data, 
-  userId, 
-  onDayComplete, 
+export function ExerciseCard({
+  data,
+  userId,
+  onDayComplete,
   onProgressChange,
   completedSets,
-  setCompletedSets 
+  setCompletedSets,
 }: ExerciseCardProps) {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(data.exercises[0]);
@@ -102,15 +102,12 @@ export function ExerciseCard({
     onDayComplete();
   };
 
-  const handleSetEdit = (setIndex: number, field: string, value: number | null) => {
-    if (currentExercise) {
-      const updatedExercises = [...data.exercises];
-      const exerciseIndex = updatedExercises.findIndex((e) => e.id === currentExercise.id);
-      if (exerciseIndex !== -1) {
-        const currentSet = updatedExercises[exerciseIndex].sets[setIndex] as Record<string, any>;
-        currentSet[field] = value;
-        currentSet.updatedAt = new Date();
-      }
+  const handleExerciseEdit = (updatedExercise: Exercise) => {
+    const updatedExercises = [...data.exercises];
+    const exerciseIndex = updatedExercises.findIndex((e) => e.id === updatedExercise.id);
+    if (exerciseIndex !== -1) {
+      updatedExercises[exerciseIndex] = updatedExercise;
+      setCurrentExercise(updatedExercise);
     }
   };
 
@@ -172,7 +169,7 @@ export function ExerciseCard({
         isOpen={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}
         exercise={currentExercise}
-        onSetEdit={handleSetEdit}
+        onExerciseEdit={handleExerciseEdit}
       />
 
       <ExerciseInfoModal

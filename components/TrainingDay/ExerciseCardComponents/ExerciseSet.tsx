@@ -25,13 +25,17 @@ export function ExerciseSet({
       <span className='text-lg font-semibold'>Serie {setIndex + 1}</span>
       <div className='flex flex-col gap-1'>
         <div className='flex justify-between w-full'>
-          <span className='text-sm'>Reps:</span>
-          <span className='text-sm'>{set.repetitions > 0 ? set.repetitions : '-'}</span>
-        </div>
-        <div className='flex justify-between w-full'>
           <span className='text-sm'>Peso:</span>
           <span className='text-sm'>{set.weight && set.weight > 0 ? `${set.weight} kg` : '-'}</span>
         </div>
+        {set.repetitions > 0 && (
+          <div className='flex justify-between w-full'>
+            <>
+              <span className='text-sm'>Reps:</span>
+              <span className='text-sm'>{set.repetitions}</span>
+            </>
+          </div>
+        )}
         {set.duration > 0 && (
           <div className='flex justify-between w-full'>
             <span className='text-sm'>Duración:</span>
