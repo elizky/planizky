@@ -14,6 +14,7 @@ import {
   AlarmClock,
   Edit2,
   HelpCircle,
+  Trash,
 } from 'lucide-react';
 
 import { toast } from '@/components/ui/use-toast';
@@ -26,21 +27,32 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import Timer from './TimerComponent';
+import Timer from './ExerciseCardComponents/TimerComponent';
 import ExerciseListItem from './ExerciseListItem';
+import { useComments } from '@/hooks/useComments';
+import CommentsSection from './ExerciseCardComponents/CommentsSection';
 
-export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
+export default function TrainingDayComponent({ data: initialData }: { data: TrainingDay }) {
   const router = useRouter();
+  const [data, setData] = useState<TrainingDay>(initialData);
   const [completedSets, setCompletedSets] = useState<{ [key: string]: boolean[] }>({});
   const [progress, setProgress] = useState(0);
   const [isDayCompleted, setIsDayCompleted] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('exercise');
-  const [newComment, setNewComment] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
+
+  const userId = data.plan.user.id;
+
+  const { newComment, setNewComment, addComment, deleteComment } = useComments(
+    data,
+    setData,
+    currentExercise,
+    userId
+  );
 
   useEffect(() => {
     const initialCompletedSets: { [key: string]: boolean[] } = {};
@@ -126,30 +138,6 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
     return time > 60 ? `${minutes} min` : `${time} seg`;
   };
 
-  const addComment = () => {
-    if (newComment.trim() && currentExercise) {
-      const updatedExercises = [...data.exercises];
-      const exerciseIndex = updatedExercises.findIndex((e) => e.id === currentExercise.id);
-      if (exerciseIndex !== -1) {
-        updatedExercises[exerciseIndex].comments = [
-          ...(updatedExercises[exerciseIndex].comments || []),
-          {
-            id: Date.now().toString(),
-            content: newComment,
-            userId: 'current-user-id',
-            trainingDayId: data.id,
-            exerciseId: currentExercise.id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-        setNewComment('');
-        // Update the data state here if you have a setData function
-        // setData({ ...data, exercises: updatedExercises });
-      }
-    }
-  };
-
   const handleSetEdit = (setIndex: number, field: string, value: number | null) => {
     if (currentExercise) {
       const updatedExercises = [...data.exercises];
@@ -221,28 +209,13 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
             }
           />
         )}
-        <div className='mt-4'>
-          <h3 className='font-semibold mb-2'>Comentarios</h3>
-          {currentExercise?.comments?.map((comment) => (
-            <div key={comment.id} className='bg-muted p-2 rounded mb-2'>
-              <p className='text-sm'>{comment.content}</p>
-              <p className='text-xs text-muted-foreground'>
-                {new Date(comment.createdAt).toLocaleString()}
-              </p>
-            </div>
-          ))}
-          <div className='flex justify-between gap-2 my-4'>
-            <Input
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder='Añade un comentario...'
-              className='w-3/4'
-            />
-            <Button onClick={addComment} className='w-1/4'>
-              Añadir
-            </Button>
-          </div>
-        </div>
+        <CommentsSection
+          comments={currentExercise?.comments || []}
+          newComment={newComment}
+          onNewCommentChange={setNewComment}
+          onAddComment={addComment}
+          onDeleteComment={deleteComment}
+        />
         <div className='flex justify-between mt-4'>
           {!isAllExercisesCompleted && (
             <Button onClick={handlePreviousExercise} disabled={currentExerciseIndex === 0}>

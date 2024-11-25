@@ -43,3 +43,9 @@ export const updateComment = async (
     data: updates,
   });
 };
+
+export const deleteComment = async (commentId: string): Promise<Comment> => {
+  return db.comment.delete({
+    where: { id: commentId },
+  });
+};

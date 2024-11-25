@@ -15,10 +15,10 @@ export interface User {
 }
 
 export interface Comment {
-  content: string;
-  createdAt: Date;
-  exerciseId: string | null;
   id: string;
+  content: string;
+  createdAt: string | Date;
+  exerciseId: string | null;
   trainingDayId: string | null;
   updatedAt: Date;
   userId: string;
@@ -72,6 +72,7 @@ export interface TrainingDay {
   createdAt: Date;
   updatedAt: Date;
   exercises: Exercise[];
+  plan: Plan;
 }
 
 export interface Plan {
@@ -125,4 +126,5 @@ export const emptyTrainingDay: TrainingDay = {
   createdAt: new Date(),
   updatedAt: new Date(),
   exercises: [emptyExercise],
+  plan: {} as Plan,
 };

@@ -2,7 +2,7 @@ import { Play, Pause, TimerIcon, RotateCcw } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { Howl } from 'howler';
 
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 interface TimerProps {
   duration: number; // Duración inicial en segundos
