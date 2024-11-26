@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Exercise } from '@/types/types';
+import { VideoIcon } from 'lucide-react';
 
 interface ModalTrainingDayProps {
   open: boolean;
@@ -30,20 +31,41 @@ const ModalTrainingDay = ({
           <DialogTitle className='text-xl'>{dayInfo.title} Exercises</DialogTitle>
           <DialogDescription>{dayInfo.description}</DialogDescription>
         </DialogHeader>
-        <ScrollArea className='w-full h-96 '>
+        <ScrollArea className='w-full '>
           {dayInfo.exercises.map((ex) => (
             <div key={ex.id} className='mb-4 last:mb-0'>
-              <h3 className='text-lg font-semibold'>{ex.title}</h3>
+              <div className='flex gap-2 items-center'>
+                <h3 className='text-lg font-semibold'>{ex.title}</h3>
+                {ex.videoUrl && <VideoIcon className='w-4 h-4' />}
+              </div>
               <p className='text-sm text-muted-foreground'>{ex.description}</p>
 
-              {ex.sets && <p className='text-sm'>Sets: {ex.sets.length}</p>}
               {ex.sets && (
-                <p className='text-sm'>
-                  Reps:{' '}
-                  {ex.sets.map((rep) => (
-                    <span key={rep.id}>{rep.repetitions} - </span>
-                  ))}
-                </p>
+                <>
+                  <p className='text-sm'>Sets: {ex.sets.length}</p>
+                  {ex.sets.some((set) => set.repetitions) && (
+                    <p className='text-sm'>
+                      Reps:{' '}
+                      {ex.sets.map((rep, index) => (
+                        <span key={rep.id}>
+                          {rep.repetitions || '-'}
+                          {index < ex.sets.length - 1 ? ' - ' : ''}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  {ex.sets.some((set) => set.duration) && (
+                    <p className='text-sm'>
+                      Duration:{' '}
+                      {ex.sets.map((rep, index) => (
+                        <span key={rep.id}>
+                          {rep.duration || '-'}
+                          {index < ex.sets.length - 1 ? ' - ' : ''}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                </>
               )}
             </div>
           ))}

@@ -46,7 +46,13 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
         setSelectedDay={setSelectedDay}
         trainingDays={trainingDays}
         handleStartTraining={handleStartTraining}
-        dayInfo={dayInfo}
+        dayInfo={{
+          ...dayInfo,
+          exercises: dayInfo.exercises.map((exercise) => ({
+            ...exercise,
+            videoUrl: exercise.videoUrl || null,
+          })),
+        }}
         setOpenModal={setOpenModal}
       />
       {/* statistics */}
