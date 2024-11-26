@@ -19,6 +19,7 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
   const [isDayCompleted, setIsDayCompleted] = useState(false);
   const [activeTab, setActiveTab] = useState('exercise');
   const [completedSets, setCompletedSets] = useState<{ [key: string]: boolean[] }>({});
+  const [selectedExerciseIndex, setSelectedExerciseIndex] = useState(0);
 
   const userId = data.plan.user.id;
 
@@ -63,6 +64,8 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
             onDayComplete={handleDayComplete}
             completedSets={completedSets}
             setCompletedSets={setCompletedSets}
+            selectedExerciseIndex={selectedExerciseIndex}
+            setSelectedExerciseIndex={setSelectedExerciseIndex}
             onProgressChange={(newProgress) => {
               setProgress(newProgress);
               setIsDayCompleted(newProgress === 100);
@@ -78,7 +81,9 @@ export default function TrainingDayComponent({ data }: { data: TrainingDay }) {
                 index={index}
                 isCompleted={completedSets[exercise.id]?.every(Boolean) || false}
                 completedSets={completedSets}
-                onSelect={() => {
+                isSelected={index === selectedExerciseIndex}
+                onSelect={(index) => {
+                  setSelectedExerciseIndex(index);
                   setActiveTab('exercise');
                 }}
               />

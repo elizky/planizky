@@ -98,6 +98,7 @@ model Exercise {
   trainingDayId String
   title         String
   description   String?
+  videoUrl      String? // Campo opcional para la URL del video
   category      String
   muscleGroup   String
   sets          Set[]

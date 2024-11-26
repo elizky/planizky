@@ -41,6 +41,7 @@ export interface Exercise {
   createdAt: Date;
   description: string | null;
   id: string;
+  videoUrl?: string;
   muscleGroup: string;
   sets: Set[];
   title: string;

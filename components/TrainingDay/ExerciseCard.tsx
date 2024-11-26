@@ -1,14 +1,22 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { toast } from '@/components/ui/use-toast';
+import { useState, useEffect } from 'react';
+import { Edit2, HelpCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '../ui/button';
 import { Exercise, TrainingDay } from '@/types/types';
+import { toast } from '@/components/ui/use-toast';
 import { ExerciseSet } from './ExerciseCardComponents/ExerciseSet';
 import Timer from './ExerciseCardComponents/TimerComponent';
 import { useComments } from '@/hooks/useComments';
 import EditExerciseModal from './Modals/EditExerciseModal';
 import ExerciseInfoModal from './Modals/ExerciseInfoModal';
-import { ExerciseHeader } from './ExerciseCardComponents/ExerciseHeader';
 import CommentsSection from './ExerciseCardComponents/CommentsSection';
 import { NavigationButtons } from './ExerciseCardComponents/NavigationButtons';
 
@@ -19,6 +27,8 @@ interface ExerciseCardProps {
   onProgressChange?: (progress: number) => void;
   completedSets: { [key: string]: boolean[] };
   setCompletedSets: React.Dispatch<React.SetStateAction<{ [key: string]: boolean[] }>>;
+  selectedExerciseIndex: number;
+  setSelectedExerciseIndex: (index: number) => void;
 }
 
 export function ExerciseCard({
@@ -28,13 +38,20 @@ export function ExerciseCard({
   onProgressChange,
   completedSets,
   setCompletedSets,
+  selectedExerciseIndex,
+  setSelectedExerciseIndex,
 }: ExerciseCardProps) {
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [currentExercise, setCurrentExercise] = useState<Exercise | null>(data.exercises[0]);
+  const [currentExercise, setCurrentExercise] = useState<Exercise | null>(
+    data.exercises[selectedExerciseIndex]
+  );
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isAllExercisesCompleted, setIsAllExercisesCompleted] = useState(false);
+  const [selectedSetIndex, setSelectedSetIndex] = useState(0);
+  const [selectedDuration, setSelectedDuration] = useState(
+    () => currentExercise?.sets.find((set) => set.duration && set.duration > 0)?.duration || 30
+  );
 
   const { newComment, setNewComment, addComment, deleteComment } = useComments(
     data,
@@ -59,6 +76,11 @@ export function ExerciseCard({
     onProgressChange?.(newProgress);
   }, [completedSets, data.exercises, onProgressChange]);
 
+  // Add this effect to update currentExercise when selectedExerciseIndex changes
+  useEffect(() => {
+    setCurrentExercise(data.exercises[selectedExerciseIndex]);
+  }, [selectedExerciseIndex, data.exercises]);
+
   const handleTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     return time > 60 ? `${minutes} min` : `${time} seg`;
@@ -75,16 +97,14 @@ export function ExerciseCard({
   };
 
   const handleNextExercise = () => {
-    if (currentExerciseIndex < data.exercises.length - 1) {
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
-      setCurrentExercise(data.exercises[currentExerciseIndex + 1]);
+    if (selectedExerciseIndex < data.exercises.length - 1) {
+      setSelectedExerciseIndex(selectedExerciseIndex + 1);
     }
   };
 
   const handlePreviousExercise = () => {
-    if (currentExerciseIndex > 0) {
-      setCurrentExerciseIndex(currentExerciseIndex - 1);
-      setCurrentExercise(data.exercises[currentExerciseIndex - 1]);
+    if (selectedExerciseIndex > 0) {
+      setSelectedExerciseIndex(selectedExerciseIndex - 1);
     }
   };
 
@@ -111,19 +131,31 @@ export function ExerciseCard({
     }
   };
 
+  const openEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
   };
 
   return (
     <Card>
-      <ExerciseHeader
-        title={currentExercise?.title || ''}
-        muscleGroup={currentExercise?.muscleGroup || ''}
-        description={currentExercise?.description || ''}
-        onInfoClick={openInfoModal}
-        onEditClick={() => setIsEditModalOpen(true)}
-      />
+      <CardHeader>
+        <CardTitle className='flex items-center justify-between capitalize'>
+          {currentExercise?.title}
+          <Button variant='ghost' size='icon' onClick={openInfoModal}>
+            <HelpCircle className='h-4 w-4' />
+          </Button>
+        </CardTitle>
+        <div className='flex justify-between items-center'>
+          <CardDescription className='capitalize'>{currentExercise?.muscleGroup}</CardDescription>
+          <Button variant='ghost' size='icon' onClick={openEditModal}>
+            <Edit2 className='h-4 w-4' />
+          </Button>
+        </div>
+        <CardDescription>{currentExercise?.description}</CardDescription>
+      </CardHeader>
       <CardContent>
         <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4'>
           {currentExercise?.sets.map((set, setIndex) => (
@@ -139,12 +171,37 @@ export function ExerciseCard({
         </div>
 
         {currentExercise?.sets.some((set) => set.duration && set.duration > 0) && (
-          <Timer
-            duration={currentExercise?.sets[0]?.duration || 30}
-            onFinish={() =>
-              toast({ title: '¡Serie completada!', description: 'Continúa al siguiente set.' })
-            }
-          />
+          <div className='space-y-2'>
+            {currentExercise.sets.filter((set) => set.duration && set.duration > 0).length > 1 && (
+              <Select
+                value={selectedSetIndex.toString()}
+                onValueChange={(value) => {
+                  const index = Number(value);
+                  setSelectedSetIndex(index);
+                  setSelectedDuration(currentExercise.sets[index].duration || 30);
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder='Selecciona una serie' />
+                </SelectTrigger>
+                <SelectContent>
+                  {currentExercise.sets.map((set, index) =>
+                    set.duration && set.duration > 0 ? (
+                      <SelectItem key={index} value={index.toString()}>
+                        Serie {index + 1} - {set.duration} segundos
+                      </SelectItem>
+                    ) : null
+                  )}
+                </SelectContent>
+              </Select>
+            )}
+            <Timer
+              duration={selectedDuration}
+              onFinish={() =>
+                toast({ title: '¡Serie completada!', description: 'Continúa al siguiente set.' })
+              }
+            />
+          </div>
         )}
 
         <CommentsSection
@@ -157,7 +214,7 @@ export function ExerciseCard({
 
         <NavigationButtons
           isAllExercisesCompleted={isAllExercisesCompleted}
-          currentExerciseIndex={currentExerciseIndex}
+          currentExerciseIndex={selectedExerciseIndex}
           exercisesLength={data.exercises.length}
           onPrevious={handlePreviousExercise}
           onNext={handleNextExercise}

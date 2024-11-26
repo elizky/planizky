@@ -12,19 +12,30 @@ interface TimerProps {
 const Timer: React.FC<TimerProps> = ({ duration, onFinish }) => {
   const [timeRemaining, setTimeRemaining] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
-  const [isSoundPlaying, setIsSoundPlaying] = useState(false); // Para controlar si el sonido está sonando
-  const soundRef = useRef<Howl | null>(null); // Referencia para almacenar la instancia del sonido
+  const [isSoundPlaying, setIsSoundPlaying] = useState(false);
+  const soundRef = useRef<Howl | null>(null);
 
-  const playSound = () => {
+  useEffect(() => {
     soundRef.current = new Howl({
       src: ['/alarm.mp3'],
       volume: 0.5,
       onend: () => {
-        setIsSoundPlaying(false); // Marcar como no sonando cuando el sonido termine
+        setIsSoundPlaying(false);
       },
     });
-    soundRef.current.play();
-    setIsSoundPlaying(true);
+
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unload();
+      }
+    };
+  }, []);
+
+  const playSound = () => {
+    if (soundRef.current) {
+      soundRef.current.play();
+      setIsSoundPlaying(true);
+    }
   };
 
   const stopSound = () => {
@@ -33,6 +44,12 @@ const Timer: React.FC<TimerProps> = ({ duration, onFinish }) => {
       setIsSoundPlaying(false);
     }
   };
+
+  useEffect(() => {
+    setTimeRemaining(duration);
+    setIsRunning(false); // Reset the timer state when duration changes
+    stopSound(); // Stop any playing sound
+  }, [duration]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -65,13 +82,8 @@ const Timer: React.FC<TimerProps> = ({ duration, onFinish }) => {
           {isRunning ? <Pause className='h-4 w-4' /> : <Play className='h-4 w-4' />}
         </Button>
         {isSoundPlaying ? (
-          <Button
-            size='icon'
-            variant='outline'
-            onClick={stopSound}
-            disabled={!isSoundPlaying} // Deshabilitar si no está sonando
-          >
-            <span className='h-4 w-4'>⏹️</span> {/* Ícono de detener */}
+          <Button size='icon' variant='outline' onClick={stopSound}>
+            <span className='h-4 w-4'>⏹️</span>
           </Button>
         ) : (
           <Button
@@ -80,7 +92,7 @@ const Timer: React.FC<TimerProps> = ({ duration, onFinish }) => {
             onClick={() => {
               setIsRunning(false);
               setTimeRemaining(duration);
-              stopSound(); // Detener el sonido si se reinicia el temporizador
+              stopSound();
             }}
           >
             <RotateCcw className='h-4 w-4' />
