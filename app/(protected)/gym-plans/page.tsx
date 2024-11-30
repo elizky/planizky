@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import PlanPage from '@/components/Plan/Plan';
 import { getUserPlans } from '@/lib/services/planService';
+import { Plan } from '@/types/types';
 
 const MyPlans = async () => {
   const session = await auth();
@@ -13,7 +14,7 @@ const MyPlans = async () => {
   }
 
   const data = await getUserPlans(session.user.email);
-  return <PlanPage plans={data} />;
+  return <PlanPage plans={data as unknown as Plan[]} />;
 };
 
 export default MyPlans;

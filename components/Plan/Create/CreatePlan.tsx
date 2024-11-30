@@ -8,8 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { Accordion } from '@/components/ui/accordion';
-import { planSchema, PlanSchema } from '@/types/formSchemas';
-import { emptyTrainingDay } from '@/types/types';
+import { planSchema, PlanSchema, TrainingType } from '@/types/formSchemas';
 import TrainingDay from '../TrainingDay';
 
 export default function CreatePlanPage() {
@@ -42,7 +41,28 @@ export default function CreatePlanPage() {
     const currentDaysCount = trainingDayFields.length;
     if (trainingDaysCount > currentDaysCount) {
       for (let i = currentDaysCount; i < trainingDaysCount; i++) {
-        appendTrainingDay(emptyTrainingDay);
+        appendTrainingDay({
+          title: '',
+          description: undefined,
+          type: TrainingType.SERIES,
+          settings: {},
+          exercises: [
+            {
+              title: '',
+              sets: [
+                {
+                  repetitions: 0,
+                  duration: undefined,
+                  weight: undefined,
+                  restTime: undefined,
+                },
+              ],
+              muscleGroup: '',
+              category: '',
+              description: undefined,
+            },
+          ],
+        });
       }
     } else if (trainingDaysCount < currentDaysCount && trainingDaysCount >= 1) {
       for (let i = currentDaysCount - 1; i >= trainingDaysCount; i--) {
@@ -58,29 +78,30 @@ export default function CreatePlanPage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-4 py-4'>
-      <div className='flex justify-between gap-4 w-full'>
-        <div className='w-2/6 space-y-2'>
+      <div className='flex flex-col sm:flex-row justify-between gap-4 w-full'>
+        <div className='w-full sm:w-1/2 space-y-2'>
           <Label htmlFor='title'>Title</Label>
           <Input id='title' {...register('title')} />
           {errors.title && <p className='text-red-500'>{errors.title.message}</p>}
         </div>
+        <div className='flex flex-row justify-between gap-4 w-full sm:w-3/6'>
+          <div className='space-y-2 w-full'>
+            <Label htmlFor='description'>Description</Label>
+            <Input id='description' {...register('description')} />
+          </div>
 
-        <div className='w-3/6 space-y-2'>
-          <Label htmlFor='description'>Description</Label>
-          <Input id='description' {...register('description')} />
-        </div>
-
-        <div className='w-1/6 space-y-2'>
-          <Label htmlFor='trainingDaysCount'>Total Days</Label>
-          <Input
-            id='trainingDaysCount'
-            type='number'
-            min='1'
-            {...register('trainingDaysCount', { valueAsNumber: true })}
-          />
-          {errors.trainingDaysCount && (
-            <p className='text-red-500'>{errors.trainingDaysCount.message}</p>
-          )}
+          <div className=' space-y-2'>
+            <Label htmlFor='trainingDaysCount'>Total Days</Label>
+            <Input
+              id='trainingDaysCount'
+              type='number'
+              min='1'
+              {...register('trainingDaysCount', { valueAsNumber: true })}
+            />
+            {errors.trainingDaysCount && (
+              <p className='text-red-500'>{errors.trainingDaysCount.message}</p>
+            )}
+          </div>
         </div>
       </div>
 

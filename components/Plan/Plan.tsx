@@ -15,7 +15,6 @@ import { InputSearch } from '../ui/input-search';
 export default function PlanPage({ plans }: { plans: Plan[] }) {
   console.log('plans', plans);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
 
   const filteredPlans = plans.filter(
     (plan) =>
@@ -74,7 +73,7 @@ export default function PlanPage({ plans }: { plans: Plan[] }) {
         />
       </div>
 
-      <Tabs defaultValue='all' className='space-y-4' onValueChange={setActiveTab}>
+      <Tabs defaultValue='all' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='all'>All Plans</TabsTrigger>
           <TabsTrigger value='active'>Active Plans</TabsTrigger>

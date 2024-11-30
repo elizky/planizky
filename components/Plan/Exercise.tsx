@@ -20,8 +20,8 @@ const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: Exerci
       </h4>
       <Button
         type='button'
-        variant='destructive'
-        size='icon'
+        variant='ghostructive'
+        size='iconSmall'
         onClick={() => remove(exerciseIndex)}
         disabled={exerciseIndex === 0}
       >
@@ -29,26 +29,26 @@ const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: Exerci
       </Button>
     </div>
     <div className='space-y-4'>
-      <div className='flex flex-col justify-between gap-4 w-full'>
-        <div className='flex justify-between gap-4 w-full'>
-          <div className='w-1/2'>
+      <div className='flex flex-col sm:flex-row justify-between gap-4 w-full'>
+        <div className='flex flex-col sm:flex-row justify-between gap-4 w-full'>
+          <div className='sm:w-1/2'>
             <Input
               placeholder='Title'
               {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.title`)}
             />
           </div>
-          <div className='w-1/2'>
+          <div className='sm:w-1/2'>
             <Input
-              placeholder='Category'
-              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.category`)}
+              placeholder='Description'
+              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.description`)}
             />
           </div>
         </div>
         <div className='flex justify-between gap-4 w-full'>
           <div className='w-1/2'>
             <Input
-              placeholder='Description'
-              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.description`)}
+              placeholder='Category'
+              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.category`)}
             />
           </div>
           <div className='w-1/2'>
@@ -58,6 +58,13 @@ const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: Exerci
             />
           </div>
         </div>
+        <div className='w-full'>
+          <Input
+            placeholder='Video URL'
+            type='url'
+            {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.videoUrl`)}
+          />
+        </div>
       </div>
       <div>
         <Label>Sets</Label>
@@ -65,7 +72,7 @@ const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: Exerci
           name={`trainingDays.${dayIndex}.exercises.${exerciseIndex}.sets`}
           control={control}
           render={({ field: setsField }) => (
-            <div className='space-y-2'>
+            <div className='space-y-4'>
               {setsField.value.map((_: any, setIndex: number) => (
                 <ExerciseSet
                   key={setIndex}

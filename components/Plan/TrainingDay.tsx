@@ -25,8 +25,8 @@ const TrainingDay = ({ dayIndex, register, control, errors }: TrainingDayProps) 
     <AccordionTrigger>Day {dayIndex + 1}</AccordionTrigger>
     <AccordionContent>
       <div className='space-y-4 border p-4 '>
-        <div className='flex justify-between gap-4 w-full'>
-          <div className='w-2/6 space-y-2'>
+        <div className='flex flex-col sm:flex-row justify-between gap-4 w-full'>
+          <div className='w-full sm:w-1/2 space-y-2'>
             <Label htmlFor={`trainingDays.${dayIndex}.title`}>Title</Label>
             <Input {...register(`trainingDays.${dayIndex}.title`)} />
             {errors.trainingDays?.[dayIndex]?.title && (
@@ -34,11 +34,11 @@ const TrainingDay = ({ dayIndex, register, control, errors }: TrainingDayProps) 
             )}
           </div>
 
-          <div className='w-3/6 space-y-2'>
+          <div className='w-full sm:w-1/2 space-y-2'>
             <Label htmlFor={`trainingDays.${dayIndex}.description`}>Description</Label>
             <Input {...register(`trainingDays.${dayIndex}.description`)} />
           </div>
-          <div className='w-1/6 space-y-2'>
+          <div className='w-full sm:w-1/2 space-y-2'>
             <Label htmlFor={`trainingDays.${dayIndex}.type`}>Type</Label>
             <Controller
               name={`trainingDays.${dayIndex}.type`}
@@ -49,8 +49,9 @@ const TrainingDay = ({ dayIndex, register, control, errors }: TrainingDayProps) 
                     <SelectValue placeholder='Select type' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='STRENGTH'>Strength</SelectItem>
-                    <SelectItem value='CARDIO'>Cardio</SelectItem>
+                    <SelectItem value='SERIES'>Series</SelectItem>
+                    <SelectItem value='CIRCUIT'>Circuit</SelectItem>
+                    <SelectItem value='COMBINED'>Combined</SelectItem>
                   </SelectContent>
                 </Select>
               )}
