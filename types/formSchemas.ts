@@ -8,22 +8,60 @@ export const TrainingType = {
 } as const;
 
 // Definición del esquema para los sets de un ejercicio
-export const setSchema = z.object({
-  repetitions: z.number().min(1, 'At least 1 repetition is required'),
-  weight: z.number().optional(),
-  duration: z.number().optional(),
-  restTime: z.number().optional(),
-});
+export const setSchema = z
+  .object({
+    repetitions: z.preprocess(
+      (val) => (val === '' || val === undefined ? undefined : Number(val)),
+      z.number().optional()
+    ),
+    weight: z.preprocess(
+      (val) => (val === '' || val === undefined ? undefined : Number(val)),
+      z.number().min(0, 'Weight cannot be negative').optional()
+    ),
+    duration: z.preprocess(
+      (val) => (val === '' || val === undefined ? undefined : Number(val)),
+      z.number().optional()
+    ),
+    restTime: z.preprocess(
+      (val) => (val === '' || val === undefined ? undefined : Number(val)),
+      z.number().min(0, 'Rest time cannot be negative').optional()
+    ),
+  })
+  .refine(
+    (data) => {
+      const hasBoth = data.repetitions != null && data.duration != null;
+      return !hasBoth;
+    },
+    {
+      message: 'Cannot have both repetitions and duration',
+    }
+  )
+  .refine(
+    (data) => {
+      const hasOne = data.repetitions != null || data.duration != null;
+      return hasOne;
+    },
+    {
+      message: 'Must have either repetitions or duration',
+    }
+  );
 
 // Definición del esquema para los ejercicios dentro de un día de entrenamiento
 export const exerciseSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
-  videoUrl: z.string().url().optional(),
+  videoUrl: z.union([
+    z.string().url(),
+    z.string().length(0),
+    z.null()
+  ]).optional().nullable(),
   category: z.string().min(1, 'Category is required'),
   muscleGroup: z.string().min(1, 'Muscle group is required'),
   sets: z.array(setSchema).min(1, 'At least one set is required'),
-});
+}).transform(data => ({
+  ...data,
+  videoUrl: data.videoUrl || null,
+}));
 
 // Update trainingDaySchema to include type and settings
 export const trainingDaySchema = z.object({

@@ -60,6 +60,7 @@ export default function CreatePlanPage() {
               muscleGroup: '',
               category: '',
               description: undefined,
+              videoUrl: '',
             },
           ],
         });

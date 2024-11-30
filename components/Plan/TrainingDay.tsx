@@ -82,6 +82,7 @@ const TrainingDay = ({ dayIndex, register, control, errors }: TrainingDayProps) 
                       }
                     }}
                     control={control}
+                    errors={errors}
                   />
                 ))}
                 <Button

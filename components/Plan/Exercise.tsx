@@ -11,8 +11,16 @@ interface ExerciseProps {
   register: any;
   control: any;
   remove: any;
+  errors: any;
 }
-const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: ExerciseProps) => (
+const Exercise = ({
+  dayIndex,
+  exerciseIndex,
+  register,
+  remove,
+  control,
+  errors,
+}: ExerciseProps) => (
   <div className='border p-4 mt-4'>
     <div className='flex justify-between items-center pb-4'>
       <h4 className='scroll-m-20 text-xl font-semibold tracking-tight'>
@@ -30,41 +38,65 @@ const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: Exerci
     </div>
     <div className='space-y-4'>
       <div className='flex flex-col sm:flex-row justify-between gap-4 w-full'>
-        <div className='flex flex-col sm:flex-row justify-between gap-4 w-full'>
-          <div className='sm:w-1/2'>
-            <Input
-              placeholder='Title'
-              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.title`)}
-            />
-          </div>
-          <div className='sm:w-1/2'>
-            <Input
-              placeholder='Description'
-              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.description`)}
-            />
-          </div>
-        </div>
-        <div className='flex justify-between gap-4 w-full'>
-          <div className='w-1/2'>
-            <Input
-              placeholder='Category'
-              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.category`)}
-            />
-          </div>
-          <div className='w-1/2'>
-            <Input
-              placeholder='Muscle Group'
-              {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.muscleGroup`)}
-            />
-          </div>
-        </div>
-        <div className='w-full'>
+        <div className='sm:w-1/2'>
           <Input
-            placeholder='Video URL'
-            type='url'
-            {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.videoUrl`)}
+            placeholder='Title'
+            {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.title`, {
+              required: 'Title is required',
+            })}
+          />
+          {errors?.trainingDays?.[dayIndex]?.exercises?.[exerciseIndex]?.title && (
+            <p className='text-sm text-destructive mt-1'>
+              {errors.trainingDays[dayIndex].exercises[exerciseIndex].title.message}
+            </p>
+          )}
+        </div>
+        <div className='sm:w-1/2'>
+          <Input
+            placeholder='Description'
+            {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.description`)}
           />
         </div>
+      </div>
+      <div className='flex justify-between gap-4 w-full'>
+        <div className='w-1/2'>
+          <Input
+            placeholder='Category'
+            {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.category`, {
+              required: 'Category is required',
+            })}
+          />
+          {errors?.trainingDays?.[dayIndex]?.exercises?.[exerciseIndex]?.category && (
+            <p className='text-sm text-destructive mt-1'>
+              {errors.trainingDays[dayIndex].exercises[exerciseIndex].category.message}
+            </p>
+          )}
+        </div>
+        <div className='w-1/2'>
+          <Input
+            placeholder='Muscle Group'
+            {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.muscleGroup`, {
+              required: 'Muscle group is required',
+            })}
+          />
+          {errors?.trainingDays?.[dayIndex]?.exercises?.[exerciseIndex]?.muscleGroup && (
+            <p className='text-sm text-destructive mt-1'>
+              {errors.trainingDays[dayIndex].exercises[exerciseIndex].muscleGroup.message}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className='w-full'>
+        <Input
+          placeholder='Video URL (optional)'
+          type='url'
+          {...register(`trainingDays.${dayIndex}.exercises.${exerciseIndex}.videoUrl`)}
+        />
+        {errors?.trainingDays?.[dayIndex]?.exercises?.[exerciseIndex]?.videoUrl && (
+          <p className='text-sm text-destructive mt-1'>
+            {errors.trainingDays[dayIndex].exercises[exerciseIndex].videoUrl.message}
+          </p>
+        )}
       </div>
       <div>
         <Label>Sets</Label>
@@ -87,6 +119,7 @@ const Exercise = ({ dayIndex, exerciseIndex, register, remove, control }: Exerci
                       setsField.onChange(newSets);
                     }
                   }}
+                  errors={errors}
                 />
               ))}
               <Button
