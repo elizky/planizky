@@ -1,11 +1,12 @@
 import { db } from '@/server/db/prisma';
+import { TrainingType } from '@/types/types';
 import { TrainingDay } from '@prisma/client';
 
 // Crear un nuevo día de entrenamiento
 export async function createTrainingDay(data: {
   planId: string;
   title: string;
-  type: string;
+  type: TrainingType;
   description?: string;
   date: Date[];
 }): Promise<TrainingDay> {
@@ -33,8 +34,11 @@ export async function getTrainingDayById(trainingDayId: string): Promise<Trainin
           comments: true,
         },
       },
-      comments: true,
-      progress: true,
+      plan: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 }
@@ -46,7 +50,10 @@ export async function updateTrainingDay(
 ): Promise<TrainingDay> {
   return await db.trainingDay.update({
     where: { id: trainingDayId },
-    data,
+    data: {
+      ...data,
+      settings: data.settings as any, // Type cast needed for Prisma JsonValue compatibility
+    },
   });
 }
 

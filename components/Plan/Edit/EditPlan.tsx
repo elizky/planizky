@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,9 +11,10 @@ import { Label } from '@/components/ui/label';
 import { Accordion } from '@/components/ui/accordion';
 import { planSchema, PlanSchema } from '@/types/formSchemas';
 import TrainingDay from '../TrainingDay';
-import { emptyTrainingDay } from '@/types/types';
+import { editPlan, getPlan } from '@/actions/plan-actions';
 
 export default function EditPlanPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const {
     register,
@@ -41,18 +43,47 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
   const trainingDaysCount = watch('trainingDaysCount');
 
   useEffect(() => {
-    // Fetch the plan data
     const fetchPlanData = async () => {
       try {
-        // Replace this with your actual API call
-        const response = await fetch(`/api/plans/${params.id}`);
-        const planData = await response.json();
+        const planData = await getPlan(params.id);
 
-        // Set the form values with the fetched data
-        setValue('title', planData.title);
-        setValue('description', planData.description);
-        setValue('trainingDaysCount', planData.trainingDays.length);
-        setValue('trainingDays', planData.trainingDays);
+        if (!planData.plan) {
+          console.error('Plan not found');
+          setIsLoading(false);
+          return;
+        }
+
+        const transformedTrainingDays = planData.plan.trainingDays.map((day) => ({
+          ...day,
+          exercises: day.exercises.map((ex) => ({
+            ...ex,
+            sets: ex.sets.map((set) => ({
+              repetitions: set.repetitions,
+              weight: set.weight ?? undefined,
+              duration: set.duration ?? undefined,
+              restTime: set.restTime ?? undefined,
+            })),
+          })),
+        }));
+
+        setValue('title', planData.plan.title);
+        setValue('description', planData.plan.description || undefined);
+        setValue('trainingDaysCount', planData.plan.trainingDays.length);
+        setValue(
+          'trainingDays',
+          transformedTrainingDays.map((day) => ({
+            title: day.title,
+            type: day.type,
+            exercises: day.exercises.map((ex) => ({
+              title: ex.title,
+              description: ex.description || undefined,
+              videoUrl: ex.videoUrl,
+              category: ex.category,
+              muscleGroup: ex.muscleGroup,
+              sets: ex.sets,
+            })),
+          }))
+        );
 
         setIsLoading(false);
       } catch (error) {
@@ -68,7 +99,11 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
     const currentDaysCount = trainingDayFields.length;
     if (trainingDaysCount > currentDaysCount) {
       for (let i = currentDaysCount; i < trainingDaysCount; i++) {
-        appendTrainingDay(emptyTrainingDay);
+        appendTrainingDay({
+          title: `Day ${i + 1}`,
+          type: 'SERIES',
+          exercises: [],
+        });
       }
     } else if (trainingDaysCount < currentDaysCount && trainingDaysCount >= 1) {
       for (let i = currentDaysCount - 1; i >= trainingDaysCount; i--) {
@@ -78,24 +113,10 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
   }, [trainingDaysCount, appendTrainingDay, removeTrainingDay, trainingDayFields.length]);
 
   const onSubmit = async (data: PlanSchema) => {
-    console.log('Updated Plan:', JSON.stringify(data, null, 2));
     try {
-      // Replace this with your actual API call
-      const response = await fetch(`/api/plans/${params.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        // Handle successful update (e.g., show a success message, redirect)
-        console.log('Plan updated successfully');
-      } else {
-        // Handle error
-        console.error('Failed to update plan');
-      }
+      await editPlan(params.id, data);
+      console.log('Plan updated successfully');
+      router.push('/gym-plans');
     } catch (error) {
       console.error('Error updating plan:', error);
     }

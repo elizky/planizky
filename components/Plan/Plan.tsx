@@ -7,15 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
 
 import { Plan } from '@/types/types';
 import PlanTable from './Table';
+import { InputSearch } from '../ui/input-search';
 
 export default function PlanPage({ plans }: { plans: Plan[] }) {
   console.log('plans', plans);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
 
   const filteredPlans = plans.filter(
     (plan) =>
@@ -65,7 +64,7 @@ export default function PlanPage({ plans }: { plans: Plan[] }) {
       </div>
 
       <div className='mb-6'>
-        <Input
+        <InputSearch
           placeholder='Search plans...'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -74,7 +73,7 @@ export default function PlanPage({ plans }: { plans: Plan[] }) {
         />
       </div>
 
-      <Tabs defaultValue='all' className='space-y-4' onValueChange={setActiveTab}>
+      <Tabs defaultValue='all' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='all'>All Plans</TabsTrigger>
           <TabsTrigger value='active'>Active Plans</TabsTrigger>

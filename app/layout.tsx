@@ -13,7 +13,7 @@ const work = Gudea({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.calculizky.com'),
+  metadataBase: new URL('https://www.planizky.com'),
   title: {
     template: '%s | Planizky',
     default: 'Planizky',
@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   description: 'Track your gym sessions with Planizky',
   applicationName: 'Planizky',
   authors: [{ name: 'Izky', url: 'https://izky.dev/' }],
-  keywords: 'exersice tracker,gym tracker, tracker, movement tracker',
+  keywords: 'exercise tracker,gym tracker, tracker, movement tracker',
   openGraph: {
     title: 'Planizky',
     description: 'Track your gym sessions with Planizky',
-    url: 'www.calculizky.com',
+    url: 'www.planizky.com',
     siteName: 'Planizky',
     locale: 'en_US',
     type: 'website',
@@ -50,12 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         data-website-id='d1356c71-f537-40a8-bd73-bfb70a926bfe'
       ></script>
       <body className={work.className}>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='dark'
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
           <TooltipProvider>
             <main>{children}</main>
             <Toaster />

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 import { Plan } from '@/types/types';
 import DayPicker from './components/DayPicker';
-import Stats from './components/Stats';
 import ModalTrainingDay from './ModalTrainingDay';
 
 export default function DashboardComponent({ data }: { data: Plan[] }) {
@@ -14,12 +13,12 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
   const activePlan = data.find((plan) => plan.isActive) || data[0];
 
   const trainingDays = activePlan.trainingDays.map(
-    ({ id, title, description, type, exercises }) => ({
+    ({ id, title, description, exercises, type }) => ({
       id,
       title,
       description,
-      type,
       exercises,
+      type,
     })
   );
 
@@ -47,11 +46,17 @@ export default function DashboardComponent({ data }: { data: Plan[] }) {
         setSelectedDay={setSelectedDay}
         trainingDays={trainingDays}
         handleStartTraining={handleStartTraining}
-        dayInfo={dayInfo}
+        dayInfo={{
+          ...dayInfo,
+          exercises: dayInfo.exercises.map((exercise) => ({
+            ...exercise,
+            videoUrl: exercise.videoUrl || null,
+          })),
+        }}
         setOpenModal={setOpenModal}
       />
       {/* statistics */}
-      <Stats />
+      {/* <Stats /> */}
       {/* modal */}
       <ModalTrainingDay
         open={openModal}

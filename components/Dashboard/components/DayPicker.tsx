@@ -10,7 +10,6 @@ interface DayPickerProps {
   trainingDays: {
     id: string;
     title: string;
-    type: string;
   }[];
   handleStartTraining: () => void;
   dayInfo: { exercises: Exercise[]; title: string; description: string | null };
@@ -43,7 +42,6 @@ const DayPicker = ({
               className='flex flex-col items-center justify-start text-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-muted hover:text-primary peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary h-28 cursor-pointer'
             >
               <span className='text-lg font-semibold'>{day.title}</span>
-              <span className='text-sm text-muted-foreground'>{day.type}</span>
             </Label>
           </div>
         ))}

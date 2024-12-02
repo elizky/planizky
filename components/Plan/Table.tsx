@@ -18,12 +18,41 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useToast } from '@/components/ui/use-toast';
 import { Plan } from '@/types/types';
 import Link from 'next/link';
 import { handleActivate } from '@/actions/dashboard-actions';
+import { deletePlan } from '@/actions/plan-actions';
+
 export default function PlanTable({ plans }: { plans: Plan[] }) {
-  
+  const { toast } = useToast();
   const activePlan = plans.find((plan) => plan.isActive) || plans[0];
+
+  const handleDelete = async (planId: string) => {
+    try {
+      const result = await deletePlan(planId);
+
+      if (result.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: result.error,
+        });
+        return;
+      }
+
+      toast({
+        description: 'Plan deleted successfully',
+      });
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to delete plan',
+      });
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <Card>
@@ -72,7 +101,12 @@ export default function PlanTable({ plans }: { plans: Plan[] }) {
                       <Link href={`/gym-plans/${plan.id}`}>
                         <DropdownMenuItem className='cursor-pointer'>Edit</DropdownMenuItem>
                       </Link>
-                      <DropdownMenuItem className='cursor-pointer'>Delete</DropdownMenuItem>
+                      <DropdownMenuItem
+                        className='cursor-pointer text-destructive'
+                        onClick={() => handleDelete(plan.id)}
+                      >
+                        Delete
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
