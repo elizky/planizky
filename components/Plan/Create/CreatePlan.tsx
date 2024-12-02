@@ -3,21 +3,26 @@
 import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { createPlan } from '@/actions/plan-actions';
+import { planSchema, PlanSchema, TrainingType } from '@/types/formSchemas';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
 import { Accordion } from '@/components/ui/accordion';
-import { planSchema, PlanSchema, TrainingType } from '@/types/formSchemas';
+import { toast } from '@/components/ui/use-toast';
+
 import TrainingDay from '../TrainingDay';
 
 export default function CreatePlanPage() {
+  const router = useRouter();
   const {
     register,
     control,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<PlanSchema>({
     resolver: zodResolver(planSchema),
     defaultValues: {
@@ -72,9 +77,29 @@ export default function CreatePlanPage() {
     }
   }, [trainingDaysCount, appendTrainingDay, removeTrainingDay, trainingDayFields.length]);
 
-  const onSubmit = (data: PlanSchema) => {
-    console.log('Entire Plan:', JSON.stringify(data, null, 2));
-    // Here you would typically send the data to your backend
+  const onSubmit = async (data: PlanSchema) => {
+    try {
+      const result = await createPlan(data);
+
+      if (result.error) {
+        toast({
+          title: 'Error',
+          description: result.error,
+        });
+        return;
+      }
+
+      toast({
+        title: 'Plan creado correctamente',
+      });
+      router.push('/gym-plans');
+    } catch (error) {
+      toast({
+        title: 'Algo salió mal',
+        description: 'Por favor, intenta nuevamente',
+      });
+      console.error('Error:', error);
+    }
   };
 
   return (

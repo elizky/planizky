@@ -555,32 +555,3 @@ export const dataMockForSeed = {
     },
   ],
 };
-
-export const emptyMockData: PlanSchema = {
-  title: '',
-  description: '',
-  trainingDaysCount: 1,
-  trainingDays: [
-    {
-      title: '',
-      type: '',
-      description: '',
-      exercises: [
-        {
-          title: '',
-          description: '',
-          category: '',
-          muscleGroup: '',
-          sets: [
-            {
-              repetitions: 1,
-              weight: undefined,
-              duration: undefined,
-              restTime: undefined,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};

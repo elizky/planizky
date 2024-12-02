@@ -50,12 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         data-website-id='d1356c71-f537-40a8-bd73-bfb70a926bfe'
       ></script>
       <body className={work.className}>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='dark'
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
           <TooltipProvider>
             <main>{children}</main>
             <Toaster />
