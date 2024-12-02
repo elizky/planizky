@@ -32,9 +32,9 @@ export async function User() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuItem className='cursor-pointer'>Settings</DropdownMenuItem>
-        <DropdownMenuItem className='cursor-pointer'>Support</DropdownMenuItem>
+        <DropdownMenuItem className='cursor-pointer'>Support</DropdownMenuItem> */}
         <DropdownMenuSeparator />
         {user ? (
           <DropdownMenuItem>

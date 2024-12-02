@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={work.className}>
         <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
           <TooltipProvider>
-            <main>{children}</main>
+            {children}
             <Toaster />
           </TooltipProvider>
         </ThemeProvider>

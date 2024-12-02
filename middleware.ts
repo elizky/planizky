@@ -12,8 +12,6 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  console.log({ isLoggedIn, path: nextUrl.pathname });
-
   // Permitir todas las rutas de API de autenticación
   if (nextUrl.pathname.startsWith(apiAuthPrefix)) {
     return NextResponse.next();

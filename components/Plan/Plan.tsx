@@ -63,32 +63,36 @@ export default function PlanPage({ plans }: { plans: Plan[] }) {
         </Card>
       </div>
 
-      <div className='mb-6'>
-        <InputSearch
-          placeholder='Search plans...'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className='max-w-sm'
-          icon={<Search className='h-4 w-4 text-muted-foreground' />}
-        />
-      </div>
+      {plans.length > 0 && (
+        <>
+          <div className='mb-6'>
+            <InputSearch
+              placeholder='Search plans...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className='max-w-sm'
+              icon={<Search className='h-4 w-4 text-muted-foreground' />}
+            />
+          </div>
 
-      <Tabs defaultValue='all' className='space-y-4'>
-        <TabsList>
-          <TabsTrigger value='all'>All Plans</TabsTrigger>
-          <TabsTrigger value='active'>Active Plans</TabsTrigger>
-          <TabsTrigger value='inactive'>Inactive Plans</TabsTrigger>
-        </TabsList>
-        <TabsContent value='all' className='space-y-4'>
-          <PlanTable plans={filteredPlans} />
-        </TabsContent>
-        <TabsContent value='active' className='space-y-4'>
-          <PlanTable plans={activePlans} />
-        </TabsContent>
-        <TabsContent value='inactive' className='space-y-4'>
-          <PlanTable plans={inactivePlans} />
-        </TabsContent>
-      </Tabs>
+          <Tabs defaultValue='all' className='space-y-4'>
+            <TabsList>
+              <TabsTrigger value='all'>All Plans</TabsTrigger>
+              <TabsTrigger value='active'>Active Plans</TabsTrigger>
+              <TabsTrigger value='inactive'>Inactive Plans</TabsTrigger>
+            </TabsList>
+            <TabsContent value='all' className='space-y-4'>
+              <PlanTable plans={filteredPlans} />
+            </TabsContent>
+            <TabsContent value='active' className='space-y-4'>
+              <PlanTable plans={activePlans} />
+            </TabsContent>
+            <TabsContent value='inactive' className='space-y-4'>
+              <PlanTable plans={inactivePlans} />
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
     </div>
   );
 }

@@ -57,63 +57,69 @@ export default function PlanTable({ plans }: { plans: Plan[] }) {
   return (
     <Card>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>Training Days</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {plans.map((plan) => (
-              <TableRow key={plan.id}>
-                <TableCell className='font-medium'>{plan.title}</TableCell>
-                <TableCell>{plan.description}</TableCell>
-                <TableCell>
-                  <Badge variant={plan.isActive ? 'default' : 'outline'}>
-                    {plan.isActive ? 'Active' : 'Inactive'}
-                  </Badge>
-                </TableCell>
-                <TableCell>{new Date(plan.startDate).toDateString()}</TableCell>
-                <TableCell className='text-center'>{plan.trainingDays.length}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button aria-haspopup='true' size='icon' variant='ghost'>
-                        <MoreVertical className='h-4 w-4' />
-                        <span className='sr-only'>Toggle menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align='end'>
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className='cursor-pointer'
-                        onClick={async () => handleActivate(plan.id, activePlan)}
-                      >
-                        Activate
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <Link href={`/gym-plans/${plan.id}`}>
-                        <DropdownMenuItem className='cursor-pointer'>Edit</DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuItem
-                        className='cursor-pointer text-destructive'
-                        onClick={() => handleDelete(plan.id)}
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+        <div className='overflow-x-auto'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className='w-[150px] md:w-auto'>Title</TableHead>
+                <TableHead className='hidden md:table-cell'>Description</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className='hidden md:table-cell'>Start Date</TableHead>
+                <TableHead className='hidden md:table-cell'>Training Days</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {plans.map((plan) => (
+                <TableRow key={plan.id}>
+                  <TableCell className='font-medium'>{plan.title}</TableCell>
+                  <TableCell className='hidden md:table-cell'>{plan.description}</TableCell>
+                  <TableCell>
+                    <Badge variant={plan.isActive ? 'default' : 'outline'}>
+                      {plan.isActive ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className='hidden md:table-cell'>
+                    {new Date(plan.startDate).toDateString()}
+                  </TableCell>
+                  <TableCell className='hidden md:table-cell text-center'>
+                    {plan.trainingDays.length}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button aria-haspopup='true' size='icon' variant='ghost'>
+                          <MoreVertical className='h-4 w-4' />
+                          <span className='sr-only'>Toggle menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align='end'>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className='cursor-pointer'
+                          onClick={async () => handleActivate(plan.id, activePlan)}
+                        >
+                          Activate
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <Link href={`/gym-plans/${plan.id}`}>
+                          <DropdownMenuItem className='cursor-pointer'>Edit</DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem
+                          className='cursor-pointer text-destructive'
+                          onClick={() => handleDelete(plan.id)}
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   );
