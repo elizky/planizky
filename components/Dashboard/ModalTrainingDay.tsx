@@ -26,7 +26,7 @@ const ModalTrainingDay = ({
 }: ModalTrainingDayProps) => {
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='w-11/12 max-w-md'>
+      <DialogContent className='w-11/12 max-w-md h-9/10'>
         <DialogHeader>
           <DialogTitle className='text-xl'>{dayInfo.title} Exercises</DialogTitle>
           <DialogDescription>{dayInfo.description}</DialogDescription>
@@ -73,9 +73,6 @@ const ModalTrainingDay = ({
         <DialogFooter className='gap-4 sm:gap-0'>
           <Button variant='default' onClick={handleStartTraining}>
             Go Training
-          </Button>
-          <Button variant='outline' disabled>
-            Full Description
           </Button>
         </DialogFooter>
       </DialogContent>

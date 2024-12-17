@@ -129,3 +129,16 @@ export const emptyTrainingDay: TrainingDay = {
   exercises: [emptyExercise],
   plan: {} as Plan,
 };
+
+export const bodyPartToCategory: Record<string, string> = {
+  back: 'Fuerza', // Espalda suele estar asociada a ejercicios de fuerza o hipertrofia.
+  cardio: 'Cardiovascular', // Ejercicios de tipo aeróbico.
+  chest: 'Hipertrofia', // Pecho típicamente relacionado con el crecimiento muscular.
+  'lower arms': 'Estabilización', // Enfoque en control y estabilidad.
+  'lower legs': 'Peso Corporal', // Ejercicios de peso corporal como sentadillas.
+  neck: 'Movilidad y Flexibilidad', // Cuello a menudo relacionado con movilidad y prevención de lesiones.
+  shoulders: 'Fuerza', // Hombros pueden enfocarse en fuerza o hipertrofia.
+  'upper arms': 'Hipertrofia', // Brazo superior relacionado con aumento de masa muscular.
+  'upper legs': 'Peso Corporal', // Tren inferior puede incluir fuerza y peso corporal.
+  waist: 'Core', // Cintura enfocada en ejercicios de core.
+};
