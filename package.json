@@ -41,6 +41,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "deepl-node": "^1.15.0",
     "dotenv-cli": "^7.4.2",
     "framer-motion": "^11.3.31",
     "howler": "^2.2.4",

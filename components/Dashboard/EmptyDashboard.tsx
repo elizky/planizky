@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function EmptyDashboard() {
   return (
-    <Card className='mt-16 text-center'>
+    <Card className='text-center'>
       <CardHeader>
         <CardTitle>No hay plan de entrenamiento</CardTitle>
       </CardHeader>
